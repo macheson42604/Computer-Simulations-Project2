@@ -1,5 +1,5 @@
-#ifndef Person_HPP
-#define Person_HPP
+#ifndef PERSON_HPP
+#define PERSON_HPP
 
 using namespace std;
 
