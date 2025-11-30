@@ -1,0 +1,5 @@
+# File to ignore for git
+*.o
+*.pdf
+
+SIM

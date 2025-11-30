@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 
 using namespace std;
@@ -9,7 +10,7 @@ void open_trace_file(string traceFile) {
     traceFileStream.open(traceFile);
     if (!traceFileStream.is_open()) {
         cerr << "Error: could not open trace file" << endl;
-        return 1;
+        exit(1);
     }
 }
 
