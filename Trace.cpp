@@ -4,14 +4,19 @@
 
 using namespace std;
 
-ifstream traceFileStream;
+ifstream autoTraceStream;
+ifstream pedTraceStream;
+ifstream buttonTraceStream;
 
-void open_trace_file(string traceFile) {
+ifstream open_trace_file(string traceFile) {
+    ifstream traceFileStream;
     traceFileStream.open(traceFile);
     if (!traceFileStream.is_open()) {
-        cerr << "Error: could not open trace file" << endl;
+        cerr << "Error: could not open trace file: " << traceFile << endl;
         exit(1);
     }
+
+    return traceFileStream;
 }
 
 double get_traceValue() {

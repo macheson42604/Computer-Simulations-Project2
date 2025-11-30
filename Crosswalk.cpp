@@ -1,5 +1,7 @@
 #include <iostream>
 #include <queue>
+#include <string>
+#include <fstream>
 
 #include "Crosswalk.h"
 #include "Person.hpp"
@@ -20,11 +22,43 @@ queue<Car> carQueue; // initialize as empty
 
 int numWalked = 0; // initialize to 0 - no one has walked yet
 
+// Simulation End Indicators
+int numPeople = 0;
+int numCars = 0;
+
+// Command line inputs
+int Q = -1;
+string AUTO_RAND;
+string PED_RAND;
+string BUTTON_RAND;
+
 /*
 MAIN FUNCTION: RUN CROSSWALK SIMULATION
 */
-int main () {
-    
+int main (int argc, char* argv[]) {
+    // Read in command line
+    if (argc != 5) {
+        cerr << "Error: Not enough or too many command line arguments, please try again" << endl;
+        return 1;
+    }
+
+    // Check that Q was correctly input
+    try {
+        Q = stoi(argv[1]);
+
+        if (Q <= 0) {
+            throw (Q);
+        }
+    } catch (const invalid_argument& e) {
+        cerr << "Error: Invalid argument for Q: " << e.what() << endl;
+    } catch (const out_of_range& e) {
+        cerr << "Error: Out of range for Q: " << e.what() << endl;
+    } catch (int input) {
+        cerr << "Error: Q must be greater than 0. You input " << input << endl;
+    }
+
+    // Check tracefile for autos
+    AUTO_RAND = argv[2];
 
     return 0;
 }
