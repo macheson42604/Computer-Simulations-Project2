@@ -5,7 +5,7 @@
 #include "Person.hpp"
 #include "Car.hpp"
 #include "Event.hpp"
-#include "Distribution.cpp"
+#include "Distribution.h"
 #include "Trace.h"
 
 using namespace std;

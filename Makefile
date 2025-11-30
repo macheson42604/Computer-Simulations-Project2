@@ -12,7 +12,7 @@ TARGET = walk-sim
 TARGET_DEL = walk-sim.exe
 
 # Source files
-SRCS = Crosswalk.cpp Car.cpp Person.cpp Trace.cpp 
+SRCS = Crosswalk.cpp Car.cpp Person.cpp Event.cpp Distribution.cpp Trace.cpp 
 
 # Object files
 OBJS = $(SRCS:.cpp=.o)
