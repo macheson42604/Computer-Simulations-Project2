@@ -25,6 +25,7 @@ CROSSWALK: NOT A CLASS
         - VK_A (double): 2.6 - a value in Uniform(a, b) for auto speed
         - VK_B (double): 4.1 - b value in Uniform(a, b) for auto speed
         - MIN_DOUBLE (double): closest positive double value to 0
+        - MAX_WALK (int): 20 peds - number of people maximum that can cross on a red light
 
     Public:
         - LightType (enum): variable
@@ -35,12 +36,17 @@ CROSSWALK: NOT A CLASS
             checks if the button has already been pressed by a pedestrian during a NewGreen / ExpGreen
         - currLight (lightType): variable
             current light signal
-        - personQueue (queue<Person>): variable
+        - personQueue (vector<Person>): variable
             the queue of people waiting at the crosswalk when the light is not Red
         - carQueue (queue<Car>): variable
             the queue of cars waiting at the crosswalk when the light is Red
         - eventList (priority_queue<Event?>):variable
             the priority queue of events to process with corresponding simulation clock times
+        - numWalked (int): variable
+            the number of people that walked during a red light (up to 20)
+
+        - walk(double remainTime) (void): method
+            process people in the queue to walk during a red light
 
 */
 
@@ -60,7 +66,11 @@ namespace Cross {
     constexpr double VK_A = 2.6;
     constexpr double VK_B = 4.1;
     constexpr double MIN_DOUBLE = std::numeric_limits<double>::denorm_min();
+    constexpr int MAX_WALK = 20;
 }
 
+
+
+void walk(double remainTime);
 
 #endif
