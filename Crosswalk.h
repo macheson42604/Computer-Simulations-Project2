@@ -1,6 +1,8 @@
 #ifndef CROSSWALK_H
 #define CROSSWALK_H
 
+#include "Person.hpp"
+
 #include <limits>
 
 using namespace std;
@@ -30,11 +32,13 @@ CROSSWALK: NOT A CLASS
     Public:
         - LightType (enum): variable
             crosswalk light type: NewGreen, ExpGreen, Yellow, Red
+        - Direction (enum): variable
+            direction the pedestrian / automobile is bound: east, west
         - simClock (double): variable
             current time of the simulation
         - isPressed (bool): variable
             checks if the button has already been pressed by a pedestrian during a NewGreen / ExpGreen
-        - currLight (lightType): variable
+        - currLight (lightType enum): variable
             current light signal
         - personQueue (vector<Person>): variable
             the queue of people waiting at the crosswalk when the light is not Red
@@ -50,6 +54,20 @@ CROSSWALK: NOT A CLASS
 
 */
 
+// Enums
+enum LightType: char {
+    NewGreen,
+    ExpGreen,
+    Yellow,
+    Red
+};
+
+enum Direction: char {
+    East,
+    West
+};
+
+// Constants
 namespace Cross {
     constexpr int B = 330;
     constexpr int W = 24;
@@ -69,8 +87,15 @@ namespace Cross {
     constexpr int MAX_WALK = 20;
 }
 
-
-
+// Methods
+void process_new_green();
+void process_exp_green();
+void process_yellow();
+void process_red();
+void process_person_enter(Direction);
+void process_person_arrive(Person);
+bool should_press(int);
+void process_check_min(Person);
 void walk(double remainTime);
 
 #endif

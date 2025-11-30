@@ -6,7 +6,8 @@ using namespace std;
 
 
 // Constructor
-Person::Person(double time) {
+Person::Person(double time, Direction travelDir) {
+    this->travelDir = travelDir;
     enterTime = time;
 
     // calculate speed (ft/s)
@@ -19,5 +20,21 @@ Person::Person(double time) {
 
 
 double Person::calc_cross_time() {
+    // time = distance / speed
     return Cross::W / speed;
+}
+
+
+// GETTERS
+
+double Person::get_enter_time() {
+    return enterTime;
+}
+
+double Person::get_arr_time() {
+    return arrTime;
+}
+
+double Person::get_speed() {
+    return speed;
 }

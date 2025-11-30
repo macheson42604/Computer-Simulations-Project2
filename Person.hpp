@@ -1,6 +1,8 @@
 #ifndef PERSON_HPP
 #define PERSON_HPP
 
+enum Direction : char; 
+
 using namespace std;
 
 
@@ -15,23 +17,38 @@ PERSON: CLASS
             simulation time that hte person will reach the button
         - speed (double): variable
             speed of the pedestrian from Uniform() distribution
+        - travelDir (Direction enum): variable
+            travel of the current 
+
 
     Public:
         - calc_cross_time() (double): method
             calculates the time it would take the given pedestrian to cross the crosswalk
+        - get_enter_time() (double): method
+            returns enterTime
+        - get_arr_time() (double): method
+            returns arrTime
+        - get_speed() (double): method
+            returns speed
 
 */
 
 
 class Person {
-    Person(double);
-private:
-    double enterTime;
-    double arrTime;
-    double speed;
+    private:
+        double enterTime;
+        double arrTime;
+        double speed;
+        Direction travelDir;
 
-public:
-    double calc_cross_time();
+    public:
+        Person(double, Direction);
+        double calc_cross_time();
+
+        // GETTERS
+        double get_enter_time();
+        double get_arr_time();
+        double get_speed();
 
 };
 
