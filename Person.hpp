@@ -2,6 +2,7 @@
 #define PERSON_HPP
 
 enum Direction : char; 
+//#include "Crosswalk.cpp"
 
 using namespace std;
 

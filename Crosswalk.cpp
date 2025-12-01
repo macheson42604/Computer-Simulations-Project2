@@ -27,12 +27,7 @@ double redEndTime = -1; //cannot use until processing first Red event
 // Simulation End Indicators
 int numPeople = 0;
 int numCars = 0;
-
-// Command line inputs
 int Q = -1;
-string AUTO_RAND;
-string PED_RAND;
-string BUTTON_RAND;
 
 /*
 MAIN FUNCTION: RUN CROSSWALK SIMULATION
@@ -62,8 +57,41 @@ int main (int argc, char* argv[]) {
     // Check tracefiles
     autoTraceStream = open_trace_file(argv[2]);
     pedTraceStream = open_trace_file(argv[3]);
-    buttTraceStream = open_trace_file(argv[4]);
+    buttonTraceStream = open_trace_file(argv[4]);
 
+    // Load the first events
+    if (Q >= 1) {
+        // East Person 
+        double enterTime1 = get_exponential(Cross::LAMBDA_P, pedTraceStream);
+        Person* firstEastPerson = new Person(enterTime1, East);
+        eventList.push(Event(enterTime1, PersonEnterEvent, firstEastPerson));
+        numPeople ++;
+
+        // East Car
+        double enterTime3 = get_exponential(Cross::LAMBDA_A, autoTraceStream);
+        Car* firstEastCar = new Car(enterTime3, East);
+        eventList.push(Event(enterTime3, CarEnterEvent, firstEastCar));
+        numCars ++;
+
+        if (Q >= 2) {
+            // West Person
+            double enterTime2 = get_exponential(Cross::LAMBDA_P, pedTraceStream);
+            Person* firstWestPerson = new Person(enterTime2, West);
+            eventList.push(Event(enterTime2, PersonEnterEvent, firstWestPerson));
+            numPeople ++;
+
+            // West Car
+            double enterTime4 = get_exponential(Cross::LAMBDA_A, autoTraceStream);
+            Car* firstWestCar = new Car(enterTime4, West);
+            eventList.push(Event(enterTime4, CarEnterEvent, firstWestCar));
+            numCars ++;
+        }
+    }
+
+    // Main code loop
+    while (!eventList.empty()) {
+
+    }
 
     return 0;
 }
@@ -159,12 +187,14 @@ PROCESS PERSON ENTER EVENT
 */
 
 void process_person_enter(Person* currPerson) {
-    // TODO: add if statement to only add in more pedestrians into simulation if Q hasn't been reached
     // create a new event to have another pedestrian enter the simulation
-    double nextEnterTime = simClock + get_exponential(Cross::LAMBDA_P, pedTraceStream);
-     // create new person object
-    Person* newPerson = new Person(nextEnterTime, currPerson->get_direction());
-    eventList.push(Event(nextEnterTime, PersonEnterEvent, newPerson));
+    if (Q >= numPeople) {
+        numPeople ++;
+        double nextEnterTime = simClock + get_exponential(Cross::LAMBDA_P, pedTraceStream);
+        // create new person object
+        Person* newPerson = new Person(nextEnterTime, currPerson->get_direction());
+        eventList.push(Event(nextEnterTime, PersonEnterEvent, newPerson));
+    }
 
     // create a new event fro when this pedestrian arrives at the crosswalk 
     eventList.push(Event(currPerson->get_arr_time(), PersonArriveEvent, currPerson));
@@ -286,11 +316,13 @@ void walk(double remainTime) {
 PROCESS CAR ENTER EVENT
 */
 void process_car_enter(Car* currCar) {
-    // TODO: add if statement to only add in more cars into simulation if Q hasn't been reached
     // create a new event to have another car enter the simulation
-    double nextEnterTime = simClock + get_exponential(Cross::LAMBDA_A, autoTraceStream);
-     // create new car object
-    Car* newCar = new Car(nextEnterTime, currCar->get_direction());
-    eventList.push(Event(nextEnterTime, CarEnterEvent, newCar));
+    if (Q >= numCars) {
+        numCars ++;
+        double nextEnterTime = simClock + get_exponential(Cross::LAMBDA_A, autoTraceStream);
+        // create new car object
+        Car* newCar = new Car(nextEnterTime, currCar->get_direction());
+        eventList.push(Event(nextEnterTime, CarEnterEvent, newCar));
+    }
 }
 
