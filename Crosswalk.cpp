@@ -83,10 +83,19 @@ void process_new_green() {
     // add ExpGreen event to occur right after the new green finishes
     eventList.push(Event(simClock + Cross::GREEN, ExpGreenEvent));
 
-    // add CheckMin event corresponding to the first person left behind if this person exists (aka if PersonQueue is not empty)
+    // P-6B: add CheckMin event corresponding to the first person left behind if this person exists (aka if PersonQueue is not empty)
     if (!personQueue.empty()) {
         eventList.push(Event(simClock + 60, CheckMinEvent, personQueue[0]));
+
+        // P-6C: loop through all the people in the queue and check if they will push the button with probability P(n=0)
+        for (Person* p: personQueue) {
+            if (should_press(0)) {
+                isPressed = true;
+                break; // no need to continue checking if the other pedestrians will press the button (even though technically in the simulation all the pedestrians should have this probability)
+            }
+        }
     }
+
 }
 
 /* 
@@ -121,6 +130,9 @@ PROCESS RED EVENT
 void process_red() {
     // set current light to Red
     currLight = Red;
+    // set isPressed back to false as no pedestrians will be pressing the button when the light is red (P-6A)
+    isPressed = false;
+
 
     // add New Green event right after red light time finished
     redEndTime = simClock + Cross::RED;
