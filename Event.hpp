@@ -63,8 +63,8 @@ class Event {
 
     public:
         Event(const double, const EventType);
-        Event(const double, const EventType, const Person*);
-        Event(const double, const EventType, const Car*);
+        Event(const double, const EventType, Person*);
+        Event(const double, const EventType, Car*);
 
         // GETTERS
         double get_process_time();
@@ -73,17 +73,17 @@ class Event {
         Car* get_assoc_car();
 
         // SETTERS
-        void set_assoc_person(const Person*);
-        void set_assoc_car(const Car*);
+        void set_assoc_person(Person*);
+        void set_assoc_car(Car*);
 
         // comparison operator for priority queue
-        bool operator>(const Event& other) {
-            if (processTime != other.get_process_time()) {
-                return processTime > other.get_process_time();
+        bool operator>(const Event& other) const {
+            if (processTime != other.processTime) {
+                return processTime > other.processTime;
             }
             // if the process times are the same, compare by the types of the event
             // TODO: REORDER THE ENUM DEFINITION TO BE IN THE CORRECT PRIORITY
-            return type > other.get_type();
+            return type > other.type;
         }
         
 

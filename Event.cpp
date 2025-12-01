@@ -17,7 +17,7 @@ Event::Event(const double time, const EventType type) {
     assocCar = nullptr;
 };
 
-Event::Event(const double time, const EventType type, const Person* attachPerson) {
+Event::Event(const double time, const EventType type, Person* attachPerson) {
     processTime = time;
     this->type = type;
     if (type == PersonEnterEvent || type == PersonArriveEvent || type == CheckMinEvent) {
@@ -29,7 +29,7 @@ Event::Event(const double time, const EventType type, const Person* attachPerson
     }
 }
 
-Event::Event(const double time, const EventType type, const Car* attachCar) {
+Event::Event(const double time, const EventType type, Car* attachCar) {
     processTime = time;
     this->type = type;
     if (type == CarEnterEvent || type == CarArriveEvent) {
@@ -85,7 +85,7 @@ Car* Event::get_assoc_car() {
 
 // SETTERS
 
-void Event::set_assoc_person(const Person* attachPerson) {
+void Event::set_assoc_person(Person* attachPerson) {
     if (type == PersonEnterEvent || type == PersonArriveEvent || type == CheckMinEvent) {
         assocPerson = attachPerson;
     }
@@ -95,7 +95,7 @@ void Event::set_assoc_person(const Person* attachPerson) {
     }
 }
 
-void Event::set_assoc_car(const Car* attachCar) {
+void Event::set_assoc_car(Car* attachCar) {
     if (type == CarEnterEvent || type == CarArriveEvent) {
         assocCar = attachCar;
     }

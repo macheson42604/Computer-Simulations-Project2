@@ -79,8 +79,8 @@ void process_new_green() {
     // set the number of people that crossed on the red light back to 0 in order to prepare for the next light cycle
     numWalked = 0;
 
-    // TODO: add ExpGreen event (process time = simClock + Cross::GREEN)
-    eventList.push(Event(simClock + Cross::GREEN, ExpGreenEvent, ))
+    // add ExpGreen event to occur right after the new green finishes
+    eventList.push(Event(simClock + Cross::GREEN, ExpGreenEvent));
 }
 
 /* 
@@ -92,7 +92,7 @@ void process_exp_green() {
 
     // check if the button has been pushed in order to add the Yellow Event, otherwise do nothing (the Yellow Event will be added by the next person who pressed the button)
     if (isPressed) {
-        // TODO add in the Yellow event
+        eventList.push(Event(simClock + Cross::MIN_DOUBLE, YellowEvent));
     }
 }
 
@@ -102,6 +102,11 @@ PROCESS YELLOW EVENT
 void process_yellow() {
     // set current light to Yellow
     currLight = Yellow;
+
+    // add Red event right after yellow light time finishes
+    eventList.push(Event(simClock + Cross::YELLOW, RedEvent));
+
+    // TODO: add in car logic
 }
 
 /* 
@@ -110,10 +115,14 @@ PROCESS RED EVENT
 void process_red() {
     // set current light to Red
     currLight = Red;
+
+    // add New Green event right after red light time finished
+    eventList.push(Event(simClock + Cross::RED, NewGreenEvent));
+
+    // TODO: add in person logic
     
     // allow queue of people to walk
     walk(Cross::RED);
-
 }
 
 
@@ -128,15 +137,15 @@ PROCESS PERSON ENTER EVENT
 */
 void process_person_enter(Direction travelDir) {
     // create new person object
-    Person newPerson(simClock, travelDir);
+    Person* newPerson = new Person(simClock, travelDir);
 
+    // TODO: add if statement to only add in more pedestrians into simulation if Q hasn't been reached
     // create a new event to have another pedestrian enter the simulation
     double nextEnterTime = simClock + get_exponential(Cross::LAMBDA_P, pedTraceStream);
-    // TODO: add to event calendar
+    eventList.push(Event(nextEnterTime, PersonEnterEvent, newPerson));
 
-    // TODO: create a new event fro when this pedestrian arrives at the crosswalk 
-    // use the newPerson.get_arr_time() function
-    // add to event calendar
+    // create a new event fro when this pedestrian arrives at the crosswalk 
+    eventList.push(Event(newPerson->get_arr_time(), PersonArriveEvent, newPerson));
 }
 
 
