@@ -18,9 +18,9 @@ TRACE: NOT A CLASS
 
 */
 
-ifstream autoTraceStream;
-ifstream pedTraceStream;
-ifstream buttonTraceStream;
+extern ifstream autoTraceStream;
+extern ifstream pedTraceStream;
+extern ifstream buttonTraceStream;
 
 ifstream open_trace_file(string);
 double get_traceValue(ifstream&);

@@ -10,6 +10,7 @@
 #include "Distribution.h"
 #include "Trace.h"
 
+
 using namespace std;
 
 // PUBLIC VARIABLES
@@ -124,7 +125,7 @@ void process_person_enter(Direction travelDir) {
     Person newPerson(simClock, travelDir);
 
     // create a new event to have another pedestrian enter the simulation
-    double nextEnterTime = simClock + get_exponential(Cross::LAMBDA_P);
+    double nextEnterTime = simClock + get_exponential(Cross::LAMBDA_P, pedTraceStream);
     // TODO: add to event calendar
 
     // TODO: create a new event fro when this pedestrian arrives at the crosswalk 

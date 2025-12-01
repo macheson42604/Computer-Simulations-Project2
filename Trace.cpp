@@ -6,6 +6,9 @@
 
 using namespace std;
 
+ifstream autoTraceStream;
+ifstream pedTraceStream;
+ifstream buttonTraceStream;
 
 ifstream open_trace_file(string traceFile) {
     ifstream traceFileStream;
