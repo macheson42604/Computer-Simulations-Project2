@@ -2,6 +2,7 @@
 #define TRACE_H
 
 #include <string>
+#include <fstream>
 
 using namespace std;
 
@@ -17,7 +18,11 @@ TRACE: NOT A CLASS
 
 */
 
-void open_trace_file(string);
-double get_traceValue();
+ifstream autoTraceStream;
+ifstream pedTraceStream;
+ifstream buttonTraceStream;
+
+ifstream open_trace_file(string);
+double get_traceValue(ifstream&);
 
 #endif

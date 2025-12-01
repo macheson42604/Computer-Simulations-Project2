@@ -168,11 +168,11 @@ void processs_person_arrive(Person arrPerson) {
 bool should_press(int n) {
     if (n == 0) {
         // P(0) = 15/16
-        return get_traceValue() < (15.0 / 16.0);
+        return get_traceValue(buttonTraceStream) < (15.0 / 16.0);
     }
     else if (n > 0) {
         // P(n) = 1/(n+1)
-        return get_traceValue() < (1.0 / (n + 1));
+        return get_traceValue(buttonTraceStream) < (1.0 / (n + 1));
     }
     else {
         cerr << "Error: cannot pass (n) number of pedestrians as less than 0" << endl;

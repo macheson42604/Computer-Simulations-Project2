@@ -2,11 +2,10 @@
 #include <fstream>
 #include <string>
 
+#include "Trace.h"
+
 using namespace std;
 
-ifstream autoTraceStream;
-ifstream pedTraceStream;
-ifstream buttonTraceStream;
 
 ifstream open_trace_file(string traceFile) {
     ifstream traceFileStream;
@@ -19,7 +18,7 @@ ifstream open_trace_file(string traceFile) {
     return traceFileStream;
 }
 
-double get_traceValue() {
+double get_traceValue(ifstream& traceFileStream) {
     // get value
     double traceValue = -1;
     if (!(traceFileStream >> traceValue)) {

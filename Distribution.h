@@ -2,6 +2,7 @@
 #define DISTRIBUTION_H
 
 #include <string>
+#include <fstream>
 
 using namespace std;
 
@@ -17,7 +18,7 @@ DISTRIBUTION: NOT A CLASS
 
 */
 
-double get_uniform(double a, double b);
-double get_exponential(double lambda);
+double get_uniform(double a, double b, ifstream&);
+double get_exponential(double lambda, ifstream&);
 
 #endif

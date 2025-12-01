@@ -1,6 +1,7 @@
 #include "Person.hpp"
 #include "Crosswalk.h"
 #include "Distribution.h"
+#include "Trace.h"
 
 using namespace std;
 
@@ -11,7 +12,7 @@ Person::Person(double time, Direction travelDir) {
     enterTime = time;
 
     // calculate speed (ft/s)
-    speed = get_uniform(Cross::VK_A, Cross::VK_B);
+    speed = get_uniform(Cross::VK_A, Cross::VK_B, pedTraceStream);
 
     // calculate the arrival time using the distance from simulation enter to button
     // distance = 1/2 block + 1 street + 1/2 block = 1 block + 1 street
