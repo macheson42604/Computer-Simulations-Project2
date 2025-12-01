@@ -59,8 +59,11 @@ int main (int argc, char* argv[]) {
         cerr << "Error: Q must be greater than 0. You input " << input << endl;
     }
 
-    // Check tracefile for autos
-    AUTO_RAND = argv[2];
+    // Check tracefiles
+    autoTraceStream = open_trace_file(argv[2]);
+    pedTraceStream = open_trace_file(argv[3]);
+    buttTraceStream = open_trace_file(argv[4]);
+
 
     return 0;
 }
