@@ -19,7 +19,7 @@ bool isPressed = false;
 enum LightType currLight = ExpGreen; // begin the simulation on ExpGreen
 vector<Person> personQueue; // initialize as empty
 vector<Car> carQueue; // initialize as empty
-// priority_queue<Event> eventList;
+priority_queue<Event, vector<Event>, greater<Event>> eventList;
 
 int numWalked = 0; // initialize to 0 - no one has walked yet
 
@@ -80,6 +80,7 @@ void process_new_green() {
     numWalked = 0;
 
     // TODO: add ExpGreen event (process time = simClock + Cross::GREEN)
+    eventList.push(Event(simClock + Cross::GREEN, ExpGreenEvent, ))
 }
 
 /* 

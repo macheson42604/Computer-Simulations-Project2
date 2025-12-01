@@ -8,13 +8,38 @@
 
 using namespace std;
 
-Event::Event(double time, EventType type) {
+// CONSTRUCTORS
+
+Event::Event(const double time, const EventType type) {
     processTime = time;
     this->type = type;
     assocPerson = nullptr;
     assocCar = nullptr;
 };
 
+Event::Event(const double time, const EventType type, const Person* attachPerson) {
+    processTime = time;
+    this->type = type;
+    if (type == PersonEnterEvent || type == PersonArriveEvent || type == CheckMinEvent) {
+        assocPerson = attachPerson;
+    }
+    else {
+        cerr << "Error: cannot initialized Event object because event type does not allow for associated pedestrian" << endl;
+        exit(1);
+    }
+}
+
+Event::Event(const double time, const EventType type, const Car* attachCar) {
+    processTime = time;
+    this->type = type;
+    if (type == CarEnterEvent || type == CarArriveEvent) {
+        assocCar = attachCar;
+    }
+    else {
+        cerr << "Error: cannot initialized Event object because event type does not allow for associated car" << endl;
+        exit(1);
+    }
+}
 
 // GETTERS
 
@@ -60,22 +85,22 @@ Car* Event::get_assoc_car() {
 
 // SETTERS
 
-void Event::set_assoc_person(Person* attachPerson) {
+void Event::set_assoc_person(const Person* attachPerson) {
     if (type == PersonEnterEvent || type == PersonArriveEvent || type == CheckMinEvent) {
         assocPerson = attachPerson;
     }
     else {
-        cerr << "Error: invalid event type - should not contain an associated pedestrian" << endl;
+        cerr << "Error: invalid event type - cannot add associated pedestrian" << endl;
         exit(1);
     }
 }
 
-void Event::set_assoc_car(Car* attachCar) {
+void Event::set_assoc_car(const Car* attachCar) {
     if (type == CarEnterEvent || type == CarArriveEvent) {
         assocCar = attachCar;
     }
     else {
-        cerr << "Error: invalid event type - should not contain an associated car" << endl;
+        cerr << "Error: invalid event type - cannot add associated car" << endl;
         exit(1);
     }
 }

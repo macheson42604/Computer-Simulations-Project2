@@ -34,6 +34,8 @@ PERSON: EVENT
             sets associated Person if event is the correct type
         - set_assoc_car(Car*) (void): method
             sets associated Car if event is the correct type
+        - operator>(Event& other) (bool): comparison operator
+            compares by process time then enum time
         
 
 
@@ -60,7 +62,9 @@ class Event {
         Car* assocCar;
 
     public:
-        Event(double, EventType);
+        Event(const double, const EventType);
+        Event(const double, const EventType, const Person*);
+        Event(const double, const EventType, const Car*);
 
         // GETTERS
         double get_process_time();
@@ -69,8 +73,18 @@ class Event {
         Car* get_assoc_car();
 
         // SETTERS
-        void set_assoc_person(Person*);
-        void set_assoc_car(Car*);
+        void set_assoc_person(const Person*);
+        void set_assoc_car(const Car*);
+
+        // comparison operator for priority queue
+        bool operator>(const Event& other) {
+            if (processTime != other.get_process_time()) {
+                return processTime > other.get_process_time();
+            }
+            // if the process times are the same, compare by the types of the event
+            // TODO: REORDER THE ENUM DEFINITION TO BE IN THE CORRECT PRIORITY
+            return type > other.get_type();
+        }
         
 
 };
