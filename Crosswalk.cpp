@@ -79,7 +79,7 @@ void process_new_green() {
     // set the number of people that crossed on the red light back to 0 in order to prepare for the next light cycle
     numWalked = 0;
 
-
+    // TODO: add ExpGreen event (process time = simClock + Cross::GREEN)
 }
 
 /* 
@@ -88,6 +88,11 @@ PROCESS EXP GREEN EVENT
 void process_exp_green() {
     // set current light to ExpGreen
     currLight = ExpGreen;
+
+    // check if the button has been pushed in order to add the Yellow Event, otherwise do nothing (the Yellow Event will be added by the next person who pressed the button)
+    if (isPressed) {
+        // TODO add in the Yellow event
+    }
 }
 
 /* 
@@ -187,7 +192,7 @@ bool should_press(int n) {
 PROCESS CHECK MIN EVENT
 */
 // P-6B: any pedestrian halted by NO WALK signal for >=1 min will push walk button
-// for simplicity we only keep track of the first person in the arrived queue to press the button ()
+// for simplicity we only keep track of the first person in the arrived queue to press the button (as that will be the first button push that really counts if the button hasn't already been pushed)
 void process_check_min(Person fplb) {
     // (FPLB) first person left behind = first person in the queue AFTER the red light turns green
     
@@ -202,7 +207,7 @@ void process_check_min(Person fplb) {
     return;
 }
 
-// QUESTION: Edge case - if person 1-20 arrived at button and didn't press, then person 21 arrives and presses button (immediately turns yellow), then all 20 first people were able to cross and person 21 wasn't able to cross (by this point 8+18=26 seconds have passed), does their 1 minute timer run out after (60-26=34) more seconds or do we restart the 1 minute timer when the light goes back from red to newgreen? - I'm guessing it's the first option (which would change our logic)
+// QUESTION: Edge case - if person 1-20 arrived at button and didn't press, then person 21 arrives and presses button (immediately turns yellow), then all 20 first people were able to cross and person 21 wasn't able to cross (by this point 8+18=26 seconds have passed), does their 1 minute timer run out after (60-26=34) more seconds or do we restart the 1 minute timer when the light goes back from red to newgreen? - I think it's the second one according to P-6B clarification
 
 
 
