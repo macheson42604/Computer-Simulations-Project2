@@ -17,11 +17,12 @@ using namespace std;
 double simClock = 0.0;
 bool isPressed = false;
 enum LightType currLight = ExpGreen; // begin the simulation on ExpGreen
-vector<Person> personQueue; // initialize as empty
+vector<Person*> personQueue; // initialize as empty
 vector<Car> carQueue; // initialize as empty
 priority_queue<Event, vector<Event>, greater<Event>> eventList;
 
 int numWalked = 0; // initialize to 0 - no one has walked yet
+double redEndTime = -1; //cannot use until processing first Red event
 
 // Simulation End Indicators
 int numPeople = 0;
@@ -81,6 +82,11 @@ void process_new_green() {
 
     // add ExpGreen event to occur right after the new green finishes
     eventList.push(Event(simClock + Cross::GREEN, ExpGreenEvent));
+
+    // add CheckMin event corresponding to the first person left behind if this person exists (aka if PersonQueue is not empty)
+    if (!personQueue.empty()) {
+        eventList.push(Event(simClock + 60, CheckMinEvent, personQueue[0]));
+    }
 }
 
 /* 
@@ -117,7 +123,8 @@ void process_red() {
     currLight = Red;
 
     // add New Green event right after red light time finished
-    eventList.push(Event(simClock + Cross::RED, NewGreenEvent));
+    redEndTime = simClock + Cross::RED;
+    eventList.push(Event(redEndTime, NewGreenEvent));
 
     // TODO: add in person logic
     
@@ -135,24 +142,24 @@ PEDESTRIAN RELATED EVENTS
 /*
 PROCESS PERSON ENTER EVENT
 */
-void process_person_enter(Direction travelDir) {
-    // create new person object
-    Person* newPerson = new Person(simClock, travelDir);
 
+void process_person_enter(Person* currPerson) {
     // TODO: add if statement to only add in more pedestrians into simulation if Q hasn't been reached
     // create a new event to have another pedestrian enter the simulation
     double nextEnterTime = simClock + get_exponential(Cross::LAMBDA_P, pedTraceStream);
+     // create new person object
+    Person* newPerson = new Person(nextEnterTime, currPerson->get_direction());
     eventList.push(Event(nextEnterTime, PersonEnterEvent, newPerson));
 
     // create a new event fro when this pedestrian arrives at the crosswalk 
-    eventList.push(Event(newPerson->get_arr_time(), PersonArriveEvent, newPerson));
+    eventList.push(Event(newPerson->get_arr_time(), PersonArriveEvent, currPerson));
 }
 
 
 /*
 PROCESS PERSON ARRIVAL EVENT
 */
-void processs_person_arrive(Person arrPerson) {
+void processs_person_arrive(Person* arrPerson) {
     // add the person to the list of pedestrians waiting at crosswalk
     personQueue.push_back(arrPerson);
 
@@ -164,18 +171,21 @@ void processs_person_arrive(Person arrPerson) {
             // set pressed button to true
             isPressed = true;
 
-            // process yellow event if the green light is already expired
+            // process yellow event immediately if the green light is already expired
             if (currLight == ExpGreen) {
-                // TODO: add yellow event immediately (process time = simClock + Cross::MIN_DOUBLE )
+                eventList.push(Event(simClock + Cross::MIN_DOUBLE, YellowEvent));
             }
         }
     }
 
     // if the pedestrian is arriving in the middle of the red, we need to check if it's possible for them to cross in the remaining time
     else {
-        // TODO: CHANGE FROM 0 TO CORRECT TIME
-        // to find remaining time, we can either (1) access a global variable for the sim clock time of when the Red Light will end (aka when Newgreen will begin) or (2) look at the event calendar for the first ExpGreen event and retrieve the simulation process time
-        walk(0);
+        if (redEndTime > simClock) {
+            walk(redEndTime - simClock); //remaining time = time that red light ends - current time
+        }
+        else {
+            cerr << "Error: redEndTime incorrectly set" << endl;
+        }
     }
     
 }
@@ -203,17 +213,29 @@ PROCESS CHECK MIN EVENT
 */
 // P-6B: any pedestrian halted by NO WALK signal for >=1 min will push walk button
 // for simplicity we only keep track of the first person in the arrived queue to press the button (as that will be the first button push that really counts if the button hasn't already been pushed)
-void process_check_min(Person fplb) {
+void process_check_min(Person* fplb) {
     // (FPLB) first person left behind = first person in the queue AFTER the red light turns green
     
     // when checking if the FPLB needs to press the button after 1 minute, there are 3 cases
-    
     // CASE 1: someone pressed the button when currLight was NewGreen and currLight is now Red
     // check the person is not in queue
-    
     // CASE 2: someone pressed the button when currLight was ExpGreen and currLight is now Yellow
-
     // CASE 3: no one has pressed the button and currLight is stil ExpGreen
+    // if (person in queue && !(isPressed)) { set isPressed to true and add in appropriate next event }
+    bool inQueue = false;
+    for (Person* p: personQueue) {
+        if (p == fplb) {
+            inQueue = true;
+            break;
+        }
+    }
+    
+    if (inQueue && !isPressed) {
+        isPressed = true;
+        if (currLight == ExpGreen) {
+            eventList.push(Event(simClock + Cross::MIN_DOUBLE, ExpGreenEvent));
+        }
+    }
     return;
 }
 
@@ -232,7 +254,7 @@ void walk(double remainTime) {
     // we need to have a counter because if there is a person that arrives to the light later in the red light and can make it they should be able to pass
     // iterate through the list of people and see if their walking time will be able to reach 
     while (!personQueue.empty() && numWalked < Cross::MAX_WALK && currInd < (int)personQueue.size()) {
-        if (personQueue[currInd].calc_cross_time() < remainTime) {
+        if (personQueue[currInd]->calc_cross_time() < remainTime) {
             // remove the person from the queue
             personQueue.erase(personQueue.begin() + currInd);
             // increase counter of people that have crossed
@@ -244,3 +266,8 @@ void walk(double remainTime) {
         }
     }
 }
+
+/*
+PROCESS CAR ENTER EVENT
+*/
+

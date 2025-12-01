@@ -39,3 +39,7 @@ double Person::get_arr_time() {
 double Person::get_speed() {
     return speed;
 }
+
+Direction Person::get_direction() {
+    return travelDir;
+}

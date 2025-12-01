@@ -30,6 +30,8 @@ PERSON: CLASS
             returns arrTime
         - get_speed() (double): method
             returns speed
+        - get_direction() (Direction enum): method
+            returns travelDir
 
 */
 
@@ -49,6 +51,7 @@ class Person {
         double get_enter_time();
         double get_arr_time();
         double get_speed();
+        Direction get_direction();
 
 };
 

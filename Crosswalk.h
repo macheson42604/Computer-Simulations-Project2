@@ -92,10 +92,10 @@ void process_new_green();
 void process_exp_green();
 void process_yellow();
 void process_red();
-void process_person_enter(Direction);
-void process_person_arrive(Person);
+void process_person_enter(Person*);
+void process_person_arrive(Person*);
 bool should_press(int);
-void process_check_min(Person);
+void process_check_min(Person*);
 void walk(double remainTime);
 
 #endif
