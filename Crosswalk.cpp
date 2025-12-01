@@ -23,6 +23,7 @@ priority_queue<Event, vector<Event>, greater<Event>> eventList;
 
 int numWalked = 0; // initialize to 0 - no one has walked yet
 double redEndTime = -1; //cannot use until processing first Red event
+Event* curEvent;
 
 // Simulation End Indicators
 int numPeople = 0;
@@ -88,9 +89,17 @@ int main (int argc, char* argv[]) {
         }
     }
 
+    // Initialize first event to be processed
+    curEvent = eventList.top();
+    eventList.pop();
+
     // Main code loop
     while (!eventList.empty()) {
-
+        if (curEvent == PersonEnterEvent) {
+            process_person_enter(curEvent->assocPerson);
+        } else if (curEvent == CarEnterEvent) {
+            process_car_enter(curEvent->assocCar);
+        }
     }
 
     return 0;
