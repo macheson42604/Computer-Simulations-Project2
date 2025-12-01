@@ -23,7 +23,6 @@ priority_queue<Event, vector<Event>, greater<Event>> eventList;
 
 int numWalked = 0; // initialize to 0 - no one has walked yet
 double redEndTime = -1; //cannot use until processing first Red event
-Event* curEvent;
 
 // Simulation End Indicators
 int numPeople = 0;
@@ -90,16 +89,32 @@ int main (int argc, char* argv[]) {
     }
 
     // Initialize first event to be processed
-    curEvent = eventList.top();
+    Event curEvent = eventList.top();
     eventList.pop();
 
     // Main code loop
     while (!eventList.empty()) {
-        if (curEvent == PersonEnterEvent) {
-            process_person_enter(curEvent->assocPerson);
-        } else if (curEvent == CarEnterEvent) {
-            process_car_enter(curEvent->assocCar);
+        if (curEvent.get_type() == PersonEnterEvent) {
+            process_person_enter(curEvent.get_assoc_person());
+        } else if (curEvent.get_type() == PersonArriveEvent) {
+            process_person_arrive(curEvent.get_assoc_person());
+        } else if (curEvent.get_type() == CarEnterEvent) {
+            process_car_enter(curEvent.get_assoc_car());
+        } else if (curEvent.get_type() == NewGreenEvent) {
+            process_new_green();
+        } else if (curEvent.get_type() == ExpGreenEvent) {
+            process_exp_green();
+        } else if (curEvent.get_type() == YellowEvent) {
+            process_yellow();
+        } else if (curEvent.get_type() == RedEvent) {
+            process_red();
+        } else if (curEvent.get_type() == CheckMinEvent) {
+            process_check_min(curEvent.get_assoc_person());
         }
+
+        // get next event
+        curEvent = eventList.top();
+        eventList.pop();
     }
 
     return 0;
@@ -213,7 +228,7 @@ void process_person_enter(Person* currPerson) {
 /*
 PROCESS PERSON ARRIVAL EVENT
 */
-void processs_person_arrive(Person* arrPerson) {
+void process_person_arrive(Person* arrPerson) {
     // add the person to the list of pedestrians waiting at crosswalk
     personQueue.push_back(arrPerson);
 
