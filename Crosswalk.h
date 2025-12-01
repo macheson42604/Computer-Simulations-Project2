@@ -2,6 +2,7 @@
 #define CROSSWALK_H
 
 #include "Person.hpp"
+#include "Car.hpp"
 
 #include <limits>
 
@@ -97,5 +98,6 @@ void process_person_arrive(Person*);
 bool should_press(int);
 void process_check_min(Person*);
 void walk(double remainTime);
+void process_car_enter(Car*);
 
 #endif

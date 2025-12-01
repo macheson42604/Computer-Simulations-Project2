@@ -1,12 +1,47 @@
 #ifndef CAR_HPP
 #define CAR_HPP
 
+enum Direction : char; 
+
 using namespace std;
 
-class Car {
-private:
+/*
+CAR: CLASS
+    Purpose: Contain attributes of a Car such as simulation enter time, speed
 
-public:
+    Private:
+        - enterTime (double): variable
+            simulation time that car entered the simulation
+        - speed (double): variable
+            speed of the car from Uniform() distribution
+        - travelDir (Direction enum): variable
+            travel of the current 
+
+
+    Public:
+        - get_enter_time() (double): method
+            returns enterTime
+        - get_speed() (double): method
+            returns speed
+        - get_direction() (Direction enum): method
+            returns travelDir
+
+*/
+
+class Car {
+    private:
+        double enterTime;
+        double speed;
+        Direction travelDir;
+
+    public:
+        Car(double, Direction);
+
+        // GETTERS
+        double get_enter_time();
+        double get_speed();
+        Direction get_direction();
+
 
 };
 

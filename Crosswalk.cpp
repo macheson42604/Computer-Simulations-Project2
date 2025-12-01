@@ -88,7 +88,7 @@ void process_new_green() {
         eventList.push(Event(simClock + 60, CheckMinEvent, personQueue[0]));
 
         // P-6C: loop through all the people in the queue and check if they will push the button with probability P(n=0)
-        for (Person* p: personQueue) {
+        for (size_t i = 0; i < personQueue.size(); i++) {
             if (should_press(0)) {
                 isPressed = true;
                 break; // no need to continue checking if the other pedestrians will press the button (even though technically in the simulation all the pedestrians should have this probability)
@@ -164,7 +164,7 @@ void process_person_enter(Person* currPerson) {
     eventList.push(Event(nextEnterTime, PersonEnterEvent, newPerson));
 
     // create a new event fro when this pedestrian arrives at the crosswalk 
-    eventList.push(Event(newPerson->get_arr_time(), PersonArriveEvent, currPerson));
+    eventList.push(Event(currPerson->get_arr_time(), PersonArriveEvent, currPerson));
 }
 
 
@@ -282,4 +282,12 @@ void walk(double remainTime) {
 /*
 PROCESS CAR ENTER EVENT
 */
+void process_car_enter(Car* currCar) {
+    // TODO: add if statement to only add in more cars into simulation if Q hasn't been reached
+    // create a new event to have another car enter the simulation
+    double nextEnterTime = simClock + get_exponential(Cross::LAMBDA_A, autoTraceStream);
+     // create new car object
+    Car* newCar = new Car(nextEnterTime, currCar->get_direction());
+    eventList.push(Event(nextEnterTime, CarEnterEvent, newCar));
+}
 
