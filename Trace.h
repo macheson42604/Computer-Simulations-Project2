@@ -1,6 +1,7 @@
 #ifndef TRACE_H
 #define TRACE_H
 
+#include <fstream>
 #include <string>
 #include <fstream>
 

@@ -18,7 +18,7 @@ double simClock = 0.0;
 bool isPressed = false;
 enum LightType currLight = ExpGreen; // begin the simulation on ExpGreen
 vector<Person> personQueue; // initialize as empty
-queue<Car> carQueue; // initialize as empty
+vector<Car> carQueue; // initialize as empty
 // priority_queue<Event> eventList;
 
 int numWalked = 0; // initialize to 0 - no one has walked yet

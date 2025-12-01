@@ -42,7 +42,7 @@ CROSSWALK: NOT A CLASS
             current light signal
         - personQueue (vector<Person>): variable
             the queue of people waiting at the crosswalk when the light is not Red
-        - carQueue (queue<Car>): variable
+        - carQueue (vector<Car>): variable
             the queue of cars waiting at the crosswalk when the light is Red
         - eventList (priority_queue<Event?>):variable
             the priority queue of events to process with corresponding simulation clock times
