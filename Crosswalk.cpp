@@ -177,9 +177,9 @@ void process_yellow() {
     eventList.push(Event(simClock + Cross::YELLOW, RedEvent));
 
     // car logic
-    for (Car car: carQueue) {
-        double speedMPH = car.get_speed();
-        double arrival = car.get_enter_time();
+    for (int i = 0; i < (int)carQueue.size(); i ++) {
+        double speedMPH = carQueue[i].get_speed();
+        double arrival = carQueue[i].get_enter_time();
 
         // Convert the input miles per hour to the needed feet per second
         double speedFPS = ((speedMPH * 5280) / 60) / 60; // 5280 ft in a mile, 60 minutes in an hour, 60 seconds in a minute
@@ -188,9 +188,9 @@ void process_yellow() {
         double distNeeded = (Cross::B * 3) + (Cross::B / 2) + (Cross::W / 2) + Cross::L;
         double distTravelled = speedFPS * ((simClock + Cross::YELLOW) - arrival);
         if (distTravelled >= distNeeded) { // can they make it?
-            carQueue.erase(carQueue.begin());
+            carQueue.erase(carQueue.begin() + i);
         } else {
-            car.set_stopped();
+            carQueue[i].set_stopped();
         }
     }
 }
