@@ -99,5 +99,6 @@ bool should_press(int);
 void process_check_min(Person*);
 void walk(double remainTime);
 void process_car_enter(Car*);
+bool drive(Car, double);
 
 #endif

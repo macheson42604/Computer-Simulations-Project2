@@ -42,7 +42,11 @@ class Car {
         double get_enter_time();
         double get_speed();
         Direction get_direction();
+        bool get_stopped();
+
+        // SETTERS
         void set_stopped();
+        
 
 
 };

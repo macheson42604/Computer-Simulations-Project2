@@ -32,6 +32,12 @@ Direction Car::get_direction() {
     return travelDir;
 }
 
+bool Car::get_stopped() {
+    return stopped;
+}
+
+// SETTERS
+
 void Car::set_stopped() {
     stopped = true;
 }

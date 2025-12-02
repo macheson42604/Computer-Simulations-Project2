@@ -178,16 +178,8 @@ void process_yellow() {
 
     // car logic
     for (int i = 0; i < (int)carQueue.size(); i ++) {
-        double speedMPH = carQueue[i].get_speed();
-        double arrival = carQueue[i].get_enter_time();
-
-        // Convert the input miles per hour to the needed feet per second
-        double speedFPS = ((speedMPH * 5280) / 60) / 60; // 5280 ft in a mile, 60 minutes in an hour, 60 seconds in a minute
-
-        // Find how far they can travel since they arrived till the end of the yellow light
-        double distNeeded = (Cross::B * 3) + (Cross::B / 2) + (Cross::W / 2) + Cross::L;
-        double distTravelled = speedFPS * ((simClock + Cross::YELLOW) - arrival);
-        if (distTravelled >= distNeeded) { // can they make it?
+        
+        if (drive(carQueue[i], Cross::YELLOW)) { // can they make it?
             carQueue.erase(carQueue.begin() + i);
         } else {
             carQueue[i].set_stopped();
@@ -366,3 +358,23 @@ void process_car_enter(Car* currCar) {
     }
 }
 
+/*
+DRIVE: Determine which cars can cross in the current light time
+*/ // time = duration of current light
+bool drive(Car car, double time) {
+    double speedMPH = car.get_speed();
+
+    // Convert the input miles per hour to the needed feet per second
+    double speedFPS = ((speedMPH * 5280) / 60) / 60; // 5280 ft in a mile, 60 minutes in an hour, 60 seconds in a minute
+
+    // Find how far they can travel since they arrived till the end of the yellow light
+    double distNeeded = (Cross::B * 3) + (Cross::B / 2) + (Cross::W / 2) + Cross::L;
+    double distTravelled = speedFPS * ((simClock + time) - car.get_enter_time());
+
+    // decide
+    if (distTravelled >= distNeeded) {
+        return true;
+    }
+
+    return false;
+}
