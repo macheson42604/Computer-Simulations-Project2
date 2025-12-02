@@ -176,7 +176,23 @@ void process_yellow() {
     // add Red event right after yellow light time finishes
     eventList.push(Event(simClock + Cross::YELLOW, RedEvent));
 
-    // TODO: add in car logic
+    // car logic
+    for (Car car: carQueue) {
+        double speedMPH = car.get_speed();
+        double arrival = car.get_enter_time();
+
+        // Convert the input miles per hour to the needed feet per second
+        double speedFPS = ((speedMPH * 5280) / 60) / 60; // 5280 ft in a mile, 60 minutes in an hour, 60 seconds in a minute
+
+        // Find how far they can travel since they arrived till the end of the yellow light
+        double distNeeded = (Cross::B * 3) + (Cross::B / 2) + (Cross::W / 2) + Cross::L;
+        double distTravelled = speedFPS * ((simClock + Cross::YELLOW) - arrival);
+        if (distTravelled >= distNeeded) { // can they make it?
+            carQueue.erase(carQueue.begin());
+        } else {
+            car.set_stopped();
+        }
+    }
 }
 
 /* 

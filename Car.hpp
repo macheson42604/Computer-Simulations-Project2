@@ -33,6 +33,7 @@ class Car {
         double enterTime;
         double speed;
         Direction travelDir;
+        bool stopped = false;
 
     public:
         Car(double, Direction);
@@ -41,6 +42,7 @@ class Car {
         double get_enter_time();
         double get_speed();
         Direction get_direction();
+        void set_stopped();
 
 
 };

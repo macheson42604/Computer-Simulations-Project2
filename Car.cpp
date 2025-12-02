@@ -31,3 +31,7 @@ double Car::get_speed() {
 Direction Car::get_direction() {
     return travelDir;
 }
+
+void Car::set_stopped() {
+    stopped = true;
+}
