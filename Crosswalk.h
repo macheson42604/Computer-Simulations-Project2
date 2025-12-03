@@ -63,6 +63,7 @@ namespace Cross {
     // total distance car must travel = 7 blocks + 6 streets + 1 car length
     constexpr double TOTAL_DRIVE_DIST = (Cross::B * 7) + (Cross::S * 6);
     // QUESTION - exit simulation when front of car reaches end or back of car?
+    // ANSWER - when the front of the car reached the end
     // "Pedestrians exit the simulation at the south edge of the crosswalk, autos exit the simulation when reaching the entry point for autos traveling in the opposite direction."
 }
 

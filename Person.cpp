@@ -22,7 +22,7 @@ Person::Person(double time, Direction travelDir, int nP) {
 
     // calculate optimal time = enterTime + elapsedTime
     // time elapsed = total distance / constant speed
-    optimalTime = enterTime + Cross::TOTAL_WALK_DIST / speed;
+    optimalTime = enterTime + (Cross::TOTAL_WALK_DIST / speed);
 
     // give id
     id = nP;
