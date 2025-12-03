@@ -5,6 +5,7 @@
 #include "Car.hpp"
 
 #include <limits>
+#include <string>
 
 using namespace std;
 
@@ -44,8 +45,9 @@ namespace Cross {
     constexpr double RED = 18.0;
     constexpr double YELLOW = 8.0;
     constexpr double GREEN = 35.0;
-    constexpr double LAMBDA_P = 3.0;
-    constexpr double LAMBDA_A = 4.0;
+    constexpr double LAMBDA_P = 3.0/60.0;
+    //string LAMBDA_P = "3.0";
+    constexpr double LAMBDA_A = 4.0/60.0;
     constexpr double L = 9.0;
     constexpr double ACC = 10.0;
     constexpr double VJ_A = 25.0;
@@ -97,7 +99,7 @@ void process_yellow();
 void process_red();
 void process_person_enter(Person*);
 void process_person_arrive(Person*);
-bool should_press(int);
+bool should_press(double);
 void process_check_min(Person*);
 void walk(double remainTime);
 void process_car_enter(Car*);

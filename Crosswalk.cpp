@@ -334,14 +334,14 @@ void process_person_arrive(Person* arrPerson) {
 }
 
 // should_press(): helper function to satisfy P-6A
-bool should_press(int n) {
+bool should_press(double n) {
     if (n == 0) {
         // P(0) = 15/16
         return get_traceValue(buttonTraceStream) < (15.0 / 16.0);
     }
     else if (n > 0) {
         // P(n) = 1/(n+1)
-        return get_traceValue(buttonTraceStream) < (1.0 / (n + 1));
+        return get_traceValue(buttonTraceStream) < (1.0 / (n + 1.0));
     }
     else {
         cerr << "Error: cannot pass (n) number of pedestrians as less than 0" << endl;
@@ -406,7 +406,7 @@ void walk(double remainTime) {
 
             // DEBUG
             cout << "simClock: " << simClock << " | curr Light: " << get_light() <<
-            "| ped id: " << personQueue[currInd]->get_id() << " | ped delay: " << personQueue[currInd]->calc_delay() << endl;
+            "| ped id: " << personQueue[currInd]->get_id() << "| ped enter: " << personQueue[currInd]->get_enter_time() << " | ped delay: " << personQueue[currInd]->calc_delay() << endl;
             
 
 
