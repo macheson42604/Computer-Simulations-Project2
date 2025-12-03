@@ -176,6 +176,8 @@ int main (int argc, char* argv[]) {
         simClock = curEvent.get_process_time();
     }
 
+    output_stats();
+
     return 0;
 }
 
@@ -391,7 +393,7 @@ void walk(double remainTime) {
             personQueue[currInd]->update_actual_time(simClock);
 
             // all people leaving get these updated
-            update_person_stats();
+            update_person_stats(personQueue[currInd]);
             // remove the person from the queue
             personQueue.erase(personQueue.begin() + currInd);
             // increase counter of people that have crossed
@@ -441,7 +443,7 @@ void check_carQueue() {
             }
 
             // all cars leaving get these updated
-            update_car_stats();
+            update_car_stats(carQueue[carInd]);
             carQueue.erase(carQueue.begin() + carInd); // pop off, yaaaAAs queen, you go gurl
 
         } else if (currLight == Red) {
@@ -500,40 +502,31 @@ bool check_must_stop(Car& car) {
 
 /*
 ========================================================================================================
-STATISTICS
+STATISTICS (WELFORDS)
 ========================================================================================================
 */
 
-
+// USED WELFORDS 
 void update_car_stats(Car& car) {
-    // make sure to calculate v before mean!
-    update_v_Welfords(car.calc_delay());
-    v_A = v_A + ((numCars - 1)/numCars) * (car.calc_delay() - mean_DA)  (car.calc_delay() - mean_DA);
+    // update v using Welfords
+    // NOTE: call this BEFORE updating mean (so you're actually using bar{x_i-1} instead of bar{x_i})
+    // v_i = v_i-1 + (i-1)/i * (x_i - bar_x_i-1)^2
+    v_A = v_A + ((numCars - 1)/numCars) * (car.calc_delay() - mean_DA) * (car.calc_delay() - mean_DA);
 
-    // update_mean_Welfords(car.calc_delay(), mean_DA, numCars);
-    // update mean using Welfords
+    // update mean using Welfords (little redundant having in both update_car_stats and update_person_stats but better than calling 1 line func with 3 params)
+    // bar_x_i = bar_x_i-1 + (1/i) * (x_i - bar_x_i-1)
     mean_DA = mean_DA + ((1 / numCars) * (car.calc_delay() - mean_DA));
 }
 
-void update_person_stats(Person& person) {
+// USED WELFORDS 
+void update_person_stats(Person* person) {
     // update mean using Welfords
-    // update_mean_Welfords(person.calc_delay(), mean_DP, numPeople);
-    mean_DP = mean_DP + ((1 / numPeople) * (person.calc_delay() - mean_DP));
+    // bar_x_i = bar_x_i-1 + (1/i) * (x_i - bar_x_i-1)
+    mean_DP = mean_DP + ((1 / numPeople) * (person->calc_delay() - mean_DP));
 }
 
-
-double update_mean_Welfords(double delay_i, double& mean, int i) {
-
-    mean = mean + ((1 / i) * (delay_i - mean));
-}
-
-// this would only need to be used for auto
-// NOTE: call this BEFORE updating mean (so you're actually using bar{x_i-1} instead of bar{x_i})
-double update_v_Welfords(double delay_i) {
-    // v_i = v_i-1 + (i-1)/i * (x_i - bar_x_i-1)^2
-    v_A = v_A + ((numCars - 1)/numCars) * (delay_i - mean_DA)  (delay_i - mean_DA);
-}
 
 void output_stats() {
-    
+    // order: mean_DA, s2_A, mean_DP
+    cout << "OUTPUT " << mean_DA << " " << v_A << " " << mean_DP << endl;
 }
