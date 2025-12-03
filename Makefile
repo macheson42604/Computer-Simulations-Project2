@@ -6,10 +6,10 @@ CXX = g++
 CXXFLAGS = -Wall -g
 
 # Target executable
-TARGET = walk-sim
+TARGET = SIM
 
 # For deleting the target
-TARGET_DEL = walk-sim.exe
+TARGET_DEL = SIM.exe
 
 # Source files
 SRCS = Crosswalk.cpp Car.cpp Person.cpp Event.cpp Distribution.cpp Trace.cpp 
