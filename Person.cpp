@@ -20,14 +20,15 @@ Person::Person(double time, Direction travelDir) {
     // distance = 1/2 block + 1 street + 1/2 block = 1 block + 1 street
     arrTime = enterTime + (Cross::B + Cross::S) / speed;
 
-    // calculate optimal time = total distance * constant speed
-    optimalTime = Cross::TOTAL_WALK_DIST * speed;
+    // calculate optimal time = enterTime + elapsedTime
+    // time elapsed = total distance / constant speed
+    optimalTime = enterTime + Cross::TOTAL_WALK_DIST / speed;
 };
 
 
 double Person::calc_cross_time() {
     // time = distance / speed
-    return Cross::W / speed;
+    return Cross::S / speed;
 }
 
 
@@ -37,6 +38,8 @@ double Person::calc_delay() {
         exit(1);
     }
     if (actualTime - optimalTime < 0) {
+        cout << "actualTime: " << actualTime << endl;
+        cout << "optimalTime: " << optimalTime << endl;
         cerr << "Error: person actual time is less than optimal time" << endl;
         exit(1);
     }
