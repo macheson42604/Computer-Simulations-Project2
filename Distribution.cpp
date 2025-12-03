@@ -9,6 +9,7 @@ double get_uniform(double a, double b, ifstream& traceFileStream) {
     return get_traceValue(traceFileStream) * (b-a) + a;
 }
 
+// QUESTION - ARE THESE CORRECT DISTRIBUTIONS?
 double get_exponential(double lambda, ifstream& traceFileStream) {
     return -(1/lambda) * log(get_traceValue(traceFileStream));
 }

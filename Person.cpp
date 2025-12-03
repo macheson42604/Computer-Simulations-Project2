@@ -43,3 +43,11 @@ double Person::get_speed() {
 Direction Person::get_direction() {
     return travelDir;
 }
+
+double Person::get_actual_time() {
+    return actualTime;
+}
+
+double Person::get_optimal_time() {
+    return optimalTime;
+}

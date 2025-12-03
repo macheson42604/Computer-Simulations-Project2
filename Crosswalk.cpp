@@ -13,6 +13,8 @@
 
 using namespace std;
 
+// QUESTION - CHECK ALL THE REQUIREMENTS IN THE DOC WITH KEITH (IN NOTES.MD)
+
 /*
 ========================================================================================================
 PUBLIC VARIABLES
@@ -488,6 +490,24 @@ bool check_must_stop(Car& car) {
     return true;
 }
 
+
+
+
+/*
+========================================================================================================
+STATISTICS
+========================================================================================================
+*/
+
+
 void update_car_stats() {
+
+}
+
+void update_person_stats() {
+
+}
+
+void output_stats() {
 
 }

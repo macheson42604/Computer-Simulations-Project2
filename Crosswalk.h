@@ -102,6 +102,7 @@ void check_carQueue();
 void calc_actual_time(Car&);
 bool check_must_stop(Car&);
 void update_car_stats();
-
+void update_person_stats();
+void output_stats();
 
 #endif

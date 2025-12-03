@@ -55,6 +55,11 @@ class Person {
         double get_arr_time();
         double get_speed();
         Direction get_direction();
+        double get_actual_time();
+        double set_actual_time();
+
+        // SETTERS
+        void set_actual_time(double);
 
 };
 
