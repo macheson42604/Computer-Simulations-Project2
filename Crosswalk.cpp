@@ -177,12 +177,13 @@ void process_yellow() {
     eventList.push(Event(simClock + Cross::YELLOW, RedEvent));
 
     // car logic
-    for (int i = 0; i < (int)carQueue.size(); i ++) {
-        
-        if (drive(carQueue[i], Cross::YELLOW)) { // can they make it?
-            carQueue.erase(carQueue.begin() + i);
+    int carInd = 0;
+    while (carInd < (int)carQueue.size() && carQueue.size() > 0) {
+        if (drive(carQueue[carInd], Cross::YELLOW)) { // can they make it?
+            carQueue.erase(carQueue.begin() + carInd);
         } else {
-            carQueue[i].set_stopped();
+            carQueue[carInd].set_stopped();
+            carInd++;
         }
     }
 }
@@ -368,13 +369,17 @@ bool drive(Car car, double time) {
     double speedFPS = ((speedMPH * 5280) / 60) / 60; // 5280 ft in a mile, 60 minutes in an hour, 60 seconds in a minute
 
     // Find how far they can travel since they arrived till the end of the yellow light
-    double distNeeded = (Cross::B * 3) + (Cross::B / 2) + (Cross::W / 2) + Cross::L;
+    //double distNeeded = (Cross::B * 3) + (Cross::B / 2) + (Cross::W / 2) + Cross::L;
     double distTravelled = speedFPS * ((simClock + time) - car.get_enter_time());
 
     // decide
-    if (distTravelled >= distNeeded) {
+    if (distTravelled >= Cross::MAX_DRIVE) {
         return true;
     }
 
     return false;
+}
+
+void calc_delay(Car car, double time) {
+    
 }

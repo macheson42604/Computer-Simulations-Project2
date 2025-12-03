@@ -34,6 +34,7 @@ class Car {
         double speed;
         Direction travelDir;
         bool stopped = false;
+        double delay = 0;
 
     public:
         Car(double, Direction);

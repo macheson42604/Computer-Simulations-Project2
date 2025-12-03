@@ -86,6 +86,7 @@ namespace Cross {
     constexpr double VK_B = 4.1;
     constexpr double MIN_DOUBLE = std::numeric_limits<double>::denorm_min();
     constexpr int MAX_WALK = 20;
+    constexpr double MAX_DRIVE = (Cross::B * 3) + (Cross::B / 2) + (Cross::S * 3) + (Cross::W / 2) + Cross::L;
 }
 
 // Methods
