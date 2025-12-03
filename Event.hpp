@@ -1,6 +1,8 @@
 #ifndef EVENT_HPP
 #define EVENT_HPP
 
+#include <string>
+
 #include "Person.hpp"
 #include "Car.hpp"
 
@@ -71,6 +73,7 @@ class Event {
         EventType get_type();
         Person* get_assoc_person();
         Car* get_assoc_car();
+        string get_name();
 
         // SETTERS
         void set_assoc_person(Person*);

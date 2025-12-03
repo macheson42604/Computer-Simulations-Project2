@@ -87,7 +87,7 @@ int main (int argc, char* argv[]) {
     // Read in command line
     if (argc != 5) {
         cerr << "Error: Not enough or too many command line arguments, please try again" << endl;
-        return 1;
+        exit(1);
     }
 
     // Check that Q was correctly input
@@ -99,10 +99,13 @@ int main (int argc, char* argv[]) {
         }
     } catch (const invalid_argument& e) {
         cerr << "Error: Invalid argument for Q: " << e.what() << endl;
+        exit(1);
     } catch (const out_of_range& e) {
         cerr << "Error: Out of range for Q: " << e.what() << endl;
+        exit(1);
     } catch (int input) {
         cerr << "Error: Q must be greater than 0. You input " << input << endl;
+        exit(1);
     }
 
     // Check tracefiles
@@ -152,6 +155,10 @@ int main (int argc, char* argv[]) {
 
     // Main code loop
     while (!eventList.empty()) {
+        // DEBUG
+        cout << "simClock: " << simClock << endl;
+        cout << "curEvent: " << (string)curEvent.get_name() << endl;
+
         if (curEvent.get_type() == PersonEnterEvent) {
             process_person_enter(curEvent.get_assoc_person());
         } else if (curEvent.get_type() == PersonArriveEvent) {
@@ -319,6 +326,7 @@ void process_person_arrive(Person* arrPerson) {
         }
         else {
             cerr << "Error: redEndTime incorrectly set" << endl;
+            exit(1);
         }
     }
     
@@ -516,6 +524,9 @@ void update_car_stats(Car& car) {
     // update mean using Welfords (little redundant having in both update_car_stats and update_person_stats but better than calling 1 line func with 3 params)
     // bar_x_i = bar_x_i-1 + (1/i) * (x_i - bar_x_i-1)
     mean_DA = mean_DA + ((1 / numCars) * (car.calc_delay() - mean_DA));
+
+    // DEBUG
+    cout << "car mean: " << mean_DA << "; car v: " << v_A << endl;
 }
 
 // USED WELFORDS 
@@ -523,6 +534,9 @@ void update_person_stats(Person* person) {
     // update mean using Welfords
     // bar_x_i = bar_x_i-1 + (1/i) * (x_i - bar_x_i-1)
     mean_DP = mean_DP + ((1 / numPeople) * (person->calc_delay() - mean_DP));
+
+    // DEBUG
+    cout << "person mean: " << mean_DP << endl;
 }
 
 

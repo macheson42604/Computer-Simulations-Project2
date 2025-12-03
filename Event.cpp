@@ -83,6 +83,29 @@ Car* Event::get_assoc_car() {
     }
 }
 
+string Event::get_name() {
+    switch (type) {
+        case EventType::NewGreenEvent:
+            return "New Green";
+        case EventType::ExpGreenEvent:
+            return "Exp Green";
+        case EventType::YellowEvent:
+            return "Yellow";
+        case EventType::RedEvent:
+            return "Red";
+        case EventType::PersonEnterEvent:
+            return "P Enter";
+        case EventType::PersonArriveEvent:
+            return "P Arrive";
+        case EventType::CarEnterEvent:
+            return "C Enter";
+        case EventType::CarArriveEvent:
+            return "C Arrive";
+        case EventType::CheckMinEvent:
+            return "Check Min";
+    }
+}
+
 // SETTERS
 
 void Event::set_assoc_person(Person* attachPerson) {
