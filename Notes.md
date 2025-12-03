@@ -18,7 +18,7 @@ Create a test file
 - `/SIMGRADING/Random 423 | head -n 30000 >tests/test.dat`
 
 Run test file
-- `./SIM crosswalk [FINISH]`
+- `./SIM [Q] ./tests/[file1] ./tests/[file2] ./tests/[file3]`
 
 ## Grading (Graphs)
 - `~/tmp/Crosswalk-simple/grader.sh`

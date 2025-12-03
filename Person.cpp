@@ -37,7 +37,7 @@ double Person::calc_delay() {
         exit(1);
     }
     if (actualTime - optimalTime < 0) {
-        cerr << "Error: actual time is less than optimal time" << endl;
+        cerr << "Error: person actual time is less than optimal time" << endl;
         exit(1);
     }
     return actualTime - optimalTime;
