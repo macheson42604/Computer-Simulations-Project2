@@ -107,5 +107,6 @@ bool check_must_stop(Car&);
 void update_car_stats(Car&);
 void update_person_stats(Person*);
 void output_stats();
+string get_light();
 
 #endif

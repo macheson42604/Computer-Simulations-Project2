@@ -164,6 +164,7 @@ int main (int argc, char* argv[]) {
         // DEBUG
         // cout << "simClock: " << simClock << " | events in queue: " << eventList.size() << "; curEvent: " << (string)curEvent.get_name() << endl;
 
+
         if (curEvent.get_type() == PersonEnterEvent) {
             process_person_enter(curEvent.get_assoc_person());
         } else if (curEvent.get_type() == PersonArriveEvent) {
@@ -402,6 +403,13 @@ void walk(double remainTime) {
 
             // all people leaving get these updated
             update_person_stats(personQueue[currInd]);
+
+            // DEBUG
+            cout << "simClock: " << simClock << " | curr Light: " << get_light() <<
+            "| ped id: " << personQueue[currInd]->get_id() << " | ped delay: " << personQueue[currInd]->calc_delay() << endl;
+            
+
+
             // remove the person from the queue
             personQueue.erase(personQueue.begin() + currInd);
             // increase counter of people that have crossed
@@ -460,6 +468,13 @@ void check_carQueue() {
 
             // all cars leaving get these updated
             update_car_stats(carQueue[carInd]);
+
+
+            // DEBUG
+            cout << "simClock: " << simClock << " | curr Light: " << get_light() << 
+            "| car id: " << carQueue[carInd].get_id() << " | car delay: " << carQueue[carInd].calc_delay() << endl;
+            
+
             carQueue.erase(carQueue.begin() + carInd); // pop off, yaaaAAs queen, you go gurl
 
         } else if (currLight == LightType::Red) {            
@@ -562,4 +577,21 @@ void output_stats() {
     // order: mean_DA, s2_A, mean_DP
     // s2_A = v_A/Q (numCars should = Q)
     cout << "OUTPUT " << mean_DA << " " << v_A/Q << " " << mean_DP << endl;
+}
+
+
+
+string get_light() {
+    switch (currLight) {
+        case LightType::NewGreen:
+            return "New Green";
+        case LightType::ExpGreen:
+            return "Exp Green";
+        case LightType::Yellow:
+            return "Yellow";
+        case LightType::Red:
+            return "Red";
+    }
+
+    return "NONONONONO";
 }

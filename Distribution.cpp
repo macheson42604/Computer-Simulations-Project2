@@ -11,5 +11,6 @@ double get_uniform(double a, double b, ifstream& traceFileStream) {
 
 // QUESTION - ARE THESE CORRECT DISTRIBUTIONS?
 double get_exponential(double lambda, ifstream& traceFileStream) {
-    return -(1/lambda) * log(get_traceValue(traceFileStream));
+    // Definition 3.1.1 return(-mu * log(1.0 - Random()))
+    return -(1/lambda) * log(1.0 - get_traceValue(traceFileStream));
 }
