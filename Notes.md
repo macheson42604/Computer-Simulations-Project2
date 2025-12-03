@@ -1,12 +1,10 @@
 # GRADING INFO
 [fill in later]
 
-- Welford's Equation: `Crosswalk.cpp` `INSERT FUNCTION` function - line [INSERT LINE]
+- Welford's Equation: `Crosswalk.cpp` `TODO: INSERT FUNCTION` function - line [TODO: INSERT LINE]
 - Exponential(u): `Distribution.cpp` `get_exponential(double lambda, ifstream& traceFileStream)` function - line 12
 - Q arrival times: `Crosswalk.cpp` 
 - Event List: `Crosswalk.cpp`
-
-
 
 
 # Additional Notes
@@ -20,7 +18,7 @@ Create a test file
 - `/SIMGRADING/Random 423 | head -n 30000 >tests/test.dat`
 
 Run test file
-- `./SIM walk-sim ./tests/test.dat`
+- [TODO: FILL]
 
 ## Grading (Graphs)
 - `~/tmp/Crosswalk-simple/grader.sh`

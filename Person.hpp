@@ -20,11 +20,21 @@ PERSON: CLASS
             speed of the pedestrian from Uniform() distribution
         - travelDir (Direction enum): variable
             travel of the current 
+        - actualTime (double): variable
+            simulation time when the end of person actually leaves the simulation
+        - optimalTime (double): variable
+            simulation time when the end of person leaves the simulation if the person stayed at their constant speed
 
 
     Public:
         - calc_cross_time() (double): method
             calculates the time it would take the given pedestrian to cross the crosswalk
+        - update_actual_time (double): method
+            calculates the actual time the person will leave the simulation and sets actualTime
+        - calc_delay() (double): method
+            calculates actualTime - optimalTime
+
+        
         - get_enter_time() (double): method
             returns enterTime
         - get_arr_time() (double): method
@@ -49,6 +59,8 @@ class Person {
     public:
         Person(double, Direction);
         double calc_cross_time();
+        void update_actual_time(double);
+        double calc_delay();
 
         // GETTERS
         double get_enter_time();
@@ -56,10 +68,8 @@ class Person {
         double get_speed();
         Direction get_direction();
         double get_actual_time();
-        double set_actual_time();
+        double get_optimal_time();
 
-        // SETTERS
-        void set_actual_time(double);
 
 };
 

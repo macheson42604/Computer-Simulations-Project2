@@ -58,6 +58,7 @@ double Car::calc_delay() {
     }
     if (actualTime - optimalTime < 0) {
         cerr << "Error: actual time is less than optimal time" << endl;
+        exit(1);
     }
     return actualTime - optimalTime;
 }

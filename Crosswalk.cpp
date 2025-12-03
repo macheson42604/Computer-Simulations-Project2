@@ -387,6 +387,11 @@ void walk(double remainTime) {
     // iterate through the list of people and see if their walking time will be able to reach 
     while (!personQueue.empty() && numWalked < Cross::MAX_WALK_NUM && currInd < (int)personQueue.size()) {
         if (personQueue[currInd]->calc_cross_time() < remainTime) {
+            // update their actual time in order to calculate delays for stats
+            personQueue[currInd]->update_actual_time(simClock);
+
+            // all people leaving get these updated
+            update_person_stats();
             // remove the person from the queue
             personQueue.erase(personQueue.begin() + currInd);
             // increase counter of people that have crossed
