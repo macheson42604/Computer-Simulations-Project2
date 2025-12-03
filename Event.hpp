@@ -51,7 +51,6 @@ enum EventType: char {
     PersonEnterEvent,
     PersonArriveEvent,
     CarEnterEvent,
-    CarArriveEvent,
     CheckMinEvent
 };
 

@@ -55,9 +55,10 @@ class Person {
         Direction travelDir;
         double actualTime = -1; //initialized to -1 to show that the actual time hasn't been calculated yet
         double optimalTime;
+        int id;
 
     public:
-        Person(double, Direction);
+        Person(double, Direction, int);
         double calc_cross_time();
         void update_actual_time(double);
         double calc_delay();
@@ -69,6 +70,7 @@ class Person {
         Direction get_direction();
         double get_actual_time();
         double get_optimal_time();
+        int get_id();
 
 
 };

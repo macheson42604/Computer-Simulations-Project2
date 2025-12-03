@@ -117,28 +117,32 @@ int main (int argc, char* argv[]) {
     if (Q >= 1) {
         // East Person 
         double enterTime1 = get_exponential(Cross::LAMBDA_P, pedTraceStream);
-        Person* firstEastPerson = new Person(enterTime1, East);
-        eventList.push(Event(enterTime1, PersonEnterEvent, firstEastPerson));
         numPeople ++;
+        Person* firstEastPerson = new Person(enterTime1, East, numPeople);
+        eventList.push(Event(enterTime1, PersonEnterEvent, firstEastPerson));
+        
 
         // East Car
         double enterTime3 = get_exponential(Cross::LAMBDA_A, autoTraceStream);
-        Car* firstEastCar = new Car(enterTime3, East);
-        eventList.push(Event(enterTime3, CarEnterEvent, firstEastCar));
         numCars ++;
+        Car* firstEastCar = new Car(enterTime3, East, numCars);
+        eventList.push(Event(enterTime3, CarEnterEvent, firstEastCar));
+        
 
         if (Q >= 2) {
             // West Person
             double enterTime2 = get_exponential(Cross::LAMBDA_P, pedTraceStream);
-            Person* firstWestPerson = new Person(enterTime2, West);
-            eventList.push(Event(enterTime2, PersonEnterEvent, firstWestPerson));
             numPeople ++;
+            Person* firstWestPerson = new Person(enterTime2, West, numPeople);
+            eventList.push(Event(enterTime2, PersonEnterEvent, firstWestPerson));
+            
 
             // West Car
             double enterTime4 = get_exponential(Cross::LAMBDA_A, autoTraceStream);
-            Car* firstWestCar = new Car(enterTime4, West);
-            eventList.push(Event(enterTime4, CarEnterEvent, firstWestCar));
             numCars ++;
+            Car* firstWestCar = new Car(enterTime4, West, numCars);
+            eventList.push(Event(enterTime4, CarEnterEvent, firstWestCar));
+            
         }
     }
 
@@ -149,15 +153,16 @@ int main (int argc, char* argv[]) {
     }
     // get first event
     Event curEvent = eventList.top();
-    eventList.pop();
-    // set simulation clock time to that of the event
-    simClock = curEvent.get_process_time();
+    
 
     // Main code loop
     while (!eventList.empty()) {
+        eventList.pop();
+        // set simulation clock time to that of the event
+        simClock = curEvent.get_process_time();
+
         // DEBUG
-        cout << "simClock: " << simClock << endl;
-        cout << "curEvent: " << (string)curEvent.get_name() << endl;
+        // cout << "simClock: " << simClock << " | events in queue: " << eventList.size() << "; curEvent: " << (string)curEvent.get_name() << endl;
 
         if (curEvent.get_type() == PersonEnterEvent) {
             process_person_enter(curEvent.get_assoc_person());
@@ -179,8 +184,6 @@ int main (int argc, char* argv[]) {
 
         // get next event
         curEvent = eventList.top();
-        eventList.pop();
-        simClock = curEvent.get_process_time();
     }
 
     output_stats();
@@ -257,12 +260,9 @@ void process_red() {
     // set isPressed back to false as no pedestrians will be pressing the button when the light is red (P-6A)
     isPressed = false;
 
-
     // add New Green event right after red light time finished
     redEndTime = simClock + Cross::RED;
     eventList.push(Event(redEndTime, NewGreenEvent));
-
-    // TODO: add in person logic
     
     // allow queue of people to walk
     walk(Cross::RED);
@@ -284,11 +284,11 @@ PROCESS PERSON ENTER EVENT
 
 void process_person_enter(Person* currPerson) {
     // create a new event to have another pedestrian enter the simulation
-    if (Q >= numPeople) {
+    if (numPeople < Q) {
         numPeople ++;
         double nextEnterTime = simClock + get_exponential(Cross::LAMBDA_P, pedTraceStream);
         // create new person object
-        Person* newPerson = new Person(nextEnterTime, currPerson->get_direction());
+        Person* newPerson = new Person(nextEnterTime, currPerson->get_direction(), numPeople);
         eventList.push(Event(nextEnterTime, PersonEnterEvent, newPerson));
     }
 
@@ -427,25 +427,33 @@ PROCESS CAR ENTER EVENT
 */
 void process_car_enter(Car* currCar) {
     // create a new event to have another car enter the simulation
-    if (Q >= numCars) {
+    if (numCars < Q) {
         numCars ++;
         double nextEnterTime = simClock + get_exponential(Cross::LAMBDA_A, autoTraceStream);
         // create new car object
-        Car* newCar = new Car(nextEnterTime, currCar->get_direction());
+        Car* newCar = new Car(nextEnterTime, currCar->get_direction(), numCars);
         eventList.push(Event(nextEnterTime, CarEnterEvent, newCar));
     }
+
+    carQueue.push_back(*currCar);
 }
 
 // called only during processing start of red event and new green event
 // TODO: silly me forgor to iterate the carInd
 void check_carQueue() {
+    // DEBUG
+    //cout << "carQueue size: " << (int)carQueue.size() << endl;
+
     int carInd = 0;
     while (carInd < (int)carQueue.size() && !carQueue.empty() ) { 
-        if (currLight == NewGreen) {
+        if (currLight == LightType::NewGreen) {
             if (check_must_stop(carQueue[carInd])) {carQueue[carInd].set_stopped();}
             if (carQueue[carInd].get_stopped()) { // Cars that arrived during the previous green or yellow lights and were told to stop or if they arrived during red and needed to stop
                 calc_actual_time(carQueue[carInd]);
             } else {
+                // DEBUG
+                // cout << "car index: " << carQueue[carInd].get_id() << endl;
+                
                 // cars that didn't stop will have same actual time as optimal time
                 carQueue[carInd].set_actual_time(carQueue[carInd].get_optimal_time());
             }
@@ -454,9 +462,11 @@ void check_carQueue() {
             update_car_stats(carQueue[carInd]);
             carQueue.erase(carQueue.begin() + carInd); // pop off, yaaaAAs queen, you go gurl
 
-        } else if (currLight == Red) {
+        } else if (currLight == LightType::Red) {            
             if (check_must_stop(carQueue[carInd])) {
-                carQueue[carInd].set_stopped();
+                // DEBUG
+                // cout << "Car: " << carQueue[carInd].get_id() << " stopped | ";
+                // carQueue[carInd].set_stopped();
             } 
 
             carInd ++;
@@ -467,6 +477,9 @@ void check_carQueue() {
         }
 
     }
+    
+    // DEBUG
+    // cout << "Exit check_carQueue()" << endl;
 }
 
 // actual time = before crosswalk time + deceleration time + wait time + acceleration time + after crosswalk time
@@ -489,6 +502,9 @@ void calc_actual_time(Car& car) {
     // this only works if this is only called at a new green light when the car drives off
     // if this is a green light, the simClock time will be the end of the cars wait time
     double stoppedTime = simClock - (car.get_enter_time() + changingSpeedTime + constBeforeTime);
+    // set indicated that stopped time is negative (meaning that actual time could be < optimal time)
+    if (stoppedTime < 0) { car.set_is_stopped_neg(); }
+    
 
     // Set the new actual time
     double actualTime = (changingSpeedTime * 2) + constBeforeTime + constAfterTime + stoppedTime;
@@ -499,10 +515,10 @@ bool check_must_stop(Car& car) {
     // distance traveled = speed * time elapsed
     double distTraveled = car.get_speed() * (simClock - car.get_enter_time());
     if (distTraveled >= Cross::DRIVE_CROSS_END) {
-        return false;
+        return true;
     }
 
-    return true;
+    return false;
 }
 
 
@@ -519,28 +535,31 @@ void update_car_stats(Car& car) {
     // update v using Welfords
     // NOTE: call this BEFORE updating mean (so you're actually using bar{x_i-1} instead of bar{x_i})
     // v_i = v_i-1 + (i-1)/i * (x_i - bar_x_i-1)^2
-    v_A = v_A + ((numCars - 1)/numCars) * (car.calc_delay() - mean_DA) * (car.calc_delay() - mean_DA);
+    v_A = v_A + ( ((double)(car.get_id() - 1.0)/(double)car.get_id()) * (car.calc_delay() - mean_DA) * (car.calc_delay() - mean_DA) );
 
     // update mean using Welfords (little redundant having in both update_car_stats and update_person_stats but better than calling 1 line func with 3 params)
     // bar_x_i = bar_x_i-1 + (1/i) * (x_i - bar_x_i-1)
-    mean_DA = mean_DA + ((1 / numCars) * (car.calc_delay() - mean_DA));
+    mean_DA = mean_DA + ((1.0 / (double)car.get_id()) * (car.calc_delay() - mean_DA));
 
     // DEBUG
-    cout << "car mean: " << mean_DA << "; car v: " << v_A << endl;
+    // cout << "car id: " << car.get_id() << "| car delay: " << car.calc_delay() << endl;
+    // cout << "car mean: " << mean_DA << "| car v: " << v_A << endl;
 }
 
 // USED WELFORDS 
 void update_person_stats(Person* person) {
     // update mean using Welfords
     // bar_x_i = bar_x_i-1 + (1/i) * (x_i - bar_x_i-1)
-    mean_DP = mean_DP + ((1 / numPeople) * (person->calc_delay() - mean_DP));
+    mean_DP = mean_DP + ((1.0 / (double)person->get_id()) * (person->calc_delay() - mean_DP));
 
     // DEBUG
-    cout << "person mean: " << mean_DP << endl;
+    // cout << "person delay: " << person->calc_delay() << endl;
+    // cout << "person mean: " << mean_DP << endl;
 }
 
 
 void output_stats() {
     // order: mean_DA, s2_A, mean_DP
-    cout << "OUTPUT " << mean_DA << " " << v_A << " " << mean_DP << endl;
+    // s2_A = v_A/Q (numCars should = Q)
+    cout << "OUTPUT " << mean_DA << " " << v_A/Q << " " << mean_DP << endl;
 }

@@ -32,7 +32,7 @@ Event::Event(const double time, const EventType type, Person* attachPerson) {
 Event::Event(const double time, const EventType type, Car* attachCar) {
     processTime = time;
     this->type = type;
-    if (type == CarEnterEvent || type == CarArriveEvent) {
+    if (type == CarEnterEvent) {
         assocCar = attachCar;
     }
     else {
@@ -68,7 +68,7 @@ Person* Event::get_assoc_person() {
 }
 
 Car* Event::get_assoc_car() {
-    if (type == CarEnterEvent || type == CarArriveEvent) {
+    if (type == CarEnterEvent) {
         if (assocCar == nullptr) {
             cerr << "Error: no associated car with this event" << endl;
             exit(1);
@@ -99,11 +99,11 @@ string Event::get_name() {
             return "P Arrive";
         case EventType::CarEnterEvent:
             return "C Enter";
-        case EventType::CarArriveEvent:
-            return "C Arrive";
         case EventType::CheckMinEvent:
             return "Check Min";
     }
+
+    return "NONONONONO";
 }
 
 // SETTERS
@@ -119,7 +119,7 @@ void Event::set_assoc_person(Person* attachPerson) {
 }
 
 void Event::set_assoc_car(Car* attachCar) {
-    if (type == CarEnterEvent || type == CarArriveEvent) {
+    if (type == CarEnterEvent) {
         assocCar = attachCar;
     }
     else {

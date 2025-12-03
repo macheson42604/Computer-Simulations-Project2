@@ -9,7 +9,7 @@ using namespace std;
 
 
 // Constructor
-Car::Car(double time, Direction travelDir) {
+Car::Car(double time, Direction travelDir, int nC) {
     this->travelDir = travelDir;
     enterTime = time;
 
@@ -20,7 +20,7 @@ Car::Car(double time, Direction travelDir) {
     // calculate optimal time (if the car traveled at its constant speed)
     // time elapsed = total distance / speed
     optimalTime = time + (Cross::TOTAL_DRIVE_DIST / speed);
-    
+    id = nC;
 };
 
 
@@ -56,13 +56,25 @@ double Car::calc_delay() {
         cerr << "Error: actual time car leaves simulation is not set" << endl;
         exit(1);
     }
-    if (actualTime - optimalTime < 0) {
+    if ((!isStoppedTimeNeg) && (actualTime - optimalTime < 0)) {
+        // DEBUG
+        cout << "id: " << id << " | stopped: " << isStopped << " | actual: " << actualTime << " | optimal: " << optimalTime << endl;
+
+
         cerr << "Error: car actual time is less than optimal time" << endl;
         exit(1);
     }
     return actualTime - optimalTime;
 }
 
+
+int Car::get_id() {
+    return id;
+}
+
+bool Car::get_is_stopped_neg() {
+    return isStoppedTimeNeg;
+}
 
 // SETTERS
 
@@ -73,4 +85,9 @@ void Car::set_stopped() {
 
 void Car::set_actual_time(double aT) {
     actualTime = aT;
+}
+
+// only ever set to true (defaulted to false)
+void Car::set_is_stopped_neg() {
+    isStoppedTimeNeg = true;
 }

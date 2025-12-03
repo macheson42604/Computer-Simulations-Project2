@@ -9,7 +9,7 @@ using namespace std;
 
 
 // Constructor
-Person::Person(double time, Direction travelDir) {
+Person::Person(double time, Direction travelDir, int nP) {
     this->travelDir = travelDir;
     enterTime = time;
 
@@ -23,6 +23,9 @@ Person::Person(double time, Direction travelDir) {
     // calculate optimal time = enterTime + elapsedTime
     // time elapsed = total distance / constant speed
     optimalTime = enterTime + Cross::TOTAL_WALK_DIST / speed;
+
+    // give id
+    id = nP;
 };
 
 
@@ -79,4 +82,8 @@ double Person::get_actual_time() {
 
 double Person::get_optimal_time() {
     return optimalTime;
+}
+
+int Person::get_id() {
+    return id;
 }

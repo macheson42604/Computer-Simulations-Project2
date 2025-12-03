@@ -53,9 +53,11 @@ class Car {
         bool isStopped = false; //all cars are initially moving
         double actualTime = -1; //initialized to -1 to show that the actual time hasn't been calculated yet
         double optimalTime;
+        int id;
+        bool isStoppedTimeNeg = false; //edge case: if stopped time becomes negative in calc, we technically allow actualTime < optimalTime 
 
     public:
-        Car(double, Direction);
+        Car(double, Direction, int);
         double calc_delay();
 
         // GETTERS
@@ -65,10 +67,13 @@ class Car {
         bool get_stopped();
         double get_actual_time();
         double get_optimal_time();
+        int get_id();
+        bool get_is_stopped_neg();
 
         // SETTERS
         void set_stopped();
         void set_actual_time(double);
+        void set_is_stopped_neg();
         
 
 
