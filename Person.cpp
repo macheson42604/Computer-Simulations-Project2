@@ -40,9 +40,9 @@ double Person::calc_delay() {
         cerr << "Error: actual time person leaves simulation is not set" << endl;
         exit(1);
     }
-    if (actualTime - optimalTime < 0) {
-        cout << "actualTime: " << actualTime << endl;
-        cout << "optimalTime: " << optimalTime << endl;
+    if ((actualTime - optimalTime) < -0.000001) {
+        cerr << "actualTime: " << actualTime << endl;
+        cerr << "optimalTime: " << optimalTime << endl;
         cerr << "Error: person actual time is less than optimal time" << endl;
         exit(1);
     }
