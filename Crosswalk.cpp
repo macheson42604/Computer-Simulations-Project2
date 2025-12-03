@@ -505,14 +505,35 @@ STATISTICS
 */
 
 
-void update_car_stats() {
+void update_car_stats(Car& car) {
+    // make sure to calculate v before mean!
+    update_v_Welfords(car.calc_delay());
+    v_A = v_A + ((numCars - 1)/numCars) * (car.calc_delay() - mean_DA)  (car.calc_delay() - mean_DA);
 
+    // update_mean_Welfords(car.calc_delay(), mean_DA, numCars);
+    // update mean using Welfords
+    mean_DA = mean_DA + ((1 / numCars) * (car.calc_delay() - mean_DA));
 }
 
-void update_person_stats() {
+void update_person_stats(Person& person) {
+    // update mean using Welfords
+    // update_mean_Welfords(person.calc_delay(), mean_DP, numPeople);
+    mean_DP = mean_DP + ((1 / numPeople) * (person.calc_delay() - mean_DP));
+}
 
+
+double update_mean_Welfords(double delay_i, double& mean, int i) {
+
+    mean = mean + ((1 / i) * (delay_i - mean));
+}
+
+// this would only need to be used for auto
+// NOTE: call this BEFORE updating mean (so you're actually using bar{x_i-1} instead of bar{x_i})
+double update_v_Welfords(double delay_i) {
+    // v_i = v_i-1 + (i-1)/i * (x_i - bar_x_i-1)^2
+    v_A = v_A + ((numCars - 1)/numCars) * (delay_i - mean_DA)  (delay_i - mean_DA);
 }
 
 void output_stats() {
-
+    
 }
