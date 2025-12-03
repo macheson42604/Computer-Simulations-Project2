@@ -33,3 +33,6 @@ Run test file
 - A: Automobiles
 - OD: Other Details
 - PR: Project Requirements
+
+## Debugging
+- `bash HINT2`
