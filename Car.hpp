@@ -16,6 +16,12 @@ CAR: CLASS
             speed of the car from Uniform() distribution
         - travelDir (Direction enum): variable
             travel of the current 
+        - isStopped (bool): variable
+            indicates if the car has or hasn't stopped at a red light
+        - actualTime (double): variable
+            simulation time when the end of car actually leaves the simulation
+        - optimalTime (double): variable
+            simulation time when the end of car leaves the simulation if the car stayed at its constant speed
 
 
     Public:
@@ -25,6 +31,17 @@ CAR: CLASS
             returns speed
         - get_direction() (Direction enum): method
             returns travelDir
+        - get_optimal_time() (double): method
+            returns optimalTime
+        - get_actual_time() (double): method
+            returns actualTime
+        - calc_delay() (double): method
+            returns delayed time
+
+        - set_stopped() (void): method
+            returns isStopped
+        - set_actual_time(double): method
+            calculated the actual time car leaves simulation and sets to actualTime
 
 */
 
@@ -33,20 +50,25 @@ class Car {
         double enterTime;
         double speed;
         Direction travelDir;
-        bool stopped = false;
-        double delay = 0;
+        bool isStopped = false; //all cars are initially moving
+        double actualTime = -1; //initialized to -1 to show that the actual time hasn't been calculated yet
+        double optimalTime;
 
     public:
         Car(double, Direction);
+        double calc_delay();
 
         // GETTERS
         double get_enter_time();
         double get_speed();
         Direction get_direction();
         bool get_stopped();
+        double get_actual_time();
+        double get_optimal_time();
 
         // SETTERS
         void set_stopped();
+        void set_actual_time(double);
         
 
 

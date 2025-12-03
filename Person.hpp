@@ -43,6 +43,8 @@ class Person {
         double arrTime;
         double speed;
         Direction travelDir;
+        double actualTime = -1; //initialized to -1 to show that the actual time hasn't been calculated yet
+        double optimalTime;
 
     public:
         Person(double, Direction);

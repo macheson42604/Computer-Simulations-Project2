@@ -28,31 +28,50 @@ CROSSWALK: NOT A CLASS
         - VK_A (double): 2.6 - a value in Uniform(a, b) for auto speed
         - VK_B (double): 4.1 - b value in Uniform(a, b) for auto speed
         - MIN_DOUBLE (double): closest positive double value to 0
-        - MAX_WALK (int): 20 peds - number of people maximum that can cross on a red light
+        - MAX_WALK_NUM (int): 20 peds - number of people maximum that can cross on a red light
+        - TOTAL_WALK_DIST (double): total distance person must travel = 0.5 block + 1 street + 0.5 block + 1 street
+        - DRIVE_CROSS_END (double): end of car is at end of crosswalk = 3.5 blocks + 3 streets + 0.5 sidewalk width + 1 car length
+        - DRIVE_CROSS_FRONT (double): front of car is at start of crosswalk = 3.5 blocks + 3 streets - 0.5 sidewalk width
+        - TOTAL_DRIVE_DIST (double): total distance car must travel = 7 blocks + 6 streets
+*/
 
-    Public:
-        - LightType (enum): variable
-            crosswalk light type: NewGreen, ExpGreen, Yellow, Red
-        - Direction (enum): variable
-            direction the pedestrian / automobile is bound: east, west
-        - simClock (double): variable
-            current time of the simulation
-        - isPressed (bool): variable
-            checks if the button has already been pressed by a pedestrian during a NewGreen / ExpGreen
-        - currLight (lightType enum): variable
-            current light signal
-        - personQueue (vector<Person>): variable
-            the queue of people waiting at the crosswalk when the light is not Red
-        - carQueue (vector<Car>): variable
-            the queue of cars waiting at the crosswalk when the light is Red
-        - eventList (priority_queue<Event?>):variable
-            the priority queue of events to process with corresponding simulation clock times
-        - numWalked (int): variable
-            the number of people that walked during a red light (up to 20)
 
-        - walk(double remainTime) (void): method
-            process people in the queue to walk during a red light
+// Constants
+namespace Cross {
+    constexpr int B = 330;
+    constexpr int W = 24;
+    constexpr int S = 46;
+    constexpr int RED = 18;
+    constexpr int YELLOW = 8;
+    constexpr int GREEN = 35;
+    constexpr int LAMBDA_P = 3;
+    constexpr int LAMBDA_A = 4;
+    constexpr int L = 9;
+    constexpr int ACC = 10;
+    constexpr int VJ_A = 25;
+    constexpr int VJ_B = 35;
+    constexpr double VK_A = 2.6;
+    constexpr double VK_B = 4.1;
+    constexpr double MIN_DOUBLE = std::numeric_limits<double>::denorm_min();
+    constexpr int MAX_WALK_NUM = 20;
+    // total distance person must travel = 0.5 block + 1 street + 0.5 block + 1 street
+    constexpr double TOTAL_WALK_DIST = Cross::B + (Cross::S * 2);
+    // end of car is at end of crosswalk = 3.5 blocks + 3 streets + 0.5 sidewalk width + 1 car length
+    constexpr double DRIVE_CROSS_END = (Cross::B * 3.5) + (Cross::S * 3) + (Cross::W * 0.5) + Cross::L; 
+    // front of car is at start of crosswalk = 3.5 blocks + 3 streets - 0.5 sidewalk width
+    constexpr double DRIVE_CROSS_FRONT = (Cross::B * 3.5) + (Cross::S * 3) - (Cross::W * 0.5);
+    // total distance car must travel = 7 blocks + 6 streets + 1 car length
+    constexpr double TOTAL_DRIVE_DIST = (Cross::B * 7) + (Cross::S * 6) + Cross::L;
+}
 
+
+
+/*
+Public:
+    - LightType (enum): variable
+        crosswalk light type: NewGreen, ExpGreen, Yellow, Red
+    - Direction (enum): variable
+        direction the pedestrian / automobile is bound: east, west
 */
 
 // Enums
@@ -68,27 +87,6 @@ enum Direction: char {
     West
 };
 
-// Constants
-namespace Cross {
-    constexpr int B = 330;
-    constexpr int W = 24;
-    constexpr int S = 46;
-    constexpr int RED = 18;
-    constexpr int YELLOW = 8;
-    constexpr int GREEN = 25;
-    constexpr int LAMBDA_P = 3;
-    constexpr int LAMBDA_A = 4;
-    constexpr int L = 9;
-    constexpr int ACC = 10;
-    constexpr int VJ_A = 25;
-    constexpr int VJ_B = 35;
-    constexpr double VK_A = 2.6;
-    constexpr double VK_B = 4.1;
-    constexpr double MIN_DOUBLE = std::numeric_limits<double>::denorm_min();
-    constexpr int MAX_WALK = 20;
-    constexpr double MAX_DRIVE = (Cross::B * 3) + (Cross::B / 2) + (Cross::S * 3) + (Cross::W / 2) + Cross::L;
-}
-
 // Methods
 void process_new_green();
 void process_exp_green();
@@ -100,6 +98,10 @@ bool should_press(int);
 void process_check_min(Person*);
 void walk(double remainTime);
 void process_car_enter(Car*);
-bool drive(Car, double);
+void check_carQueue();
+void calc_actual_time(Car&);
+bool check_must_stop(Car&);
+void update_car_stats();
+
 
 #endif

@@ -13,7 +13,47 @@
 
 using namespace std;
 
-// PUBLIC VARIABLES
+/*
+========================================================================================================
+PUBLIC VARIABLES
+========================================================================================================
+*/
+
+
+/*
+- simClock (double): variable
+    current time of the simulation
+- isPressed (bool): variable
+    checks if the button has already been pressed by a pedestrian during a NewGreen / ExpGreen
+- currLight (lightType enum): variable
+    current light signal
+- personQueue (vector<Person>): variable
+    the queue of people waiting at the crosswalk when the light is not Red
+- carQueue (vector<Car>): variable
+    the queue of cars waiting at the crosswalk when the light is Red
+- eventList (priority_queue<Event?>):variable
+    the priority queue of events to process with corresponding simulation clock times
+- numWalked (int): variable
+    the number of people that walked during a red light (up to 20)
+- redEndTime (double): variable
+    the simClock that the current red light will end (only set and updated when the light turns red)
+
+- numPeople (int): variable
+    current number of pedestrians in the simulation
+- numCars (int): variable
+    current number of cars in the simulation
+- Q (int): variable
+    Q = total number of autos, Q = total number of pedestrians the simulation should generate
+
+- mean_DA (double): variable
+    mean delay time of automobiles (calculated with Welfords)
+- mean_DA (double): variable 
+    mean delay tiime of pedestrians (calculated with Welfords)
+- v_A (double): variable
+    sample sum of squared deviations of automobile delays (calculated with Welfords) 
+    NOTE: the final value to report should be variance s2_A = v_A / Q
+*/
+
 double simClock = 0.0;
 bool isPressed = false;
 enum LightType currLight = ExpGreen; // begin the simulation on ExpGreen
@@ -29,9 +69,18 @@ int numPeople = 0;
 int numCars = 0;
 int Q = -1;
 
+// Statistics Variables (these will be outputted at the end)
+// Using Welford's Equations (initialize mean )
+double mean_DA = 0;
+double mean_DP = 0;
+double v_A = 0; //NOTE: the final value to report should be variance s2_A = v_A / Q
+
 /*
+========================================================================================================
 MAIN FUNCTION: RUN CROSSWALK SIMULATION
+========================================================================================================
 */
+
 int main (int argc, char* argv[]) {
     // Read in command line
     if (argc != 5) {
@@ -89,8 +138,15 @@ int main (int argc, char* argv[]) {
     }
 
     // Initialize first event to be processed
+    if (eventList.empty()) {
+        cerr << "Error: eventList is empty" << endl;
+        exit(1);
+    }
+    // get first event
     Event curEvent = eventList.top();
     eventList.pop();
+    // set simulation clock time to that of the event
+    simClock = curEvent.get_process_time();
 
     // Main code loop
     while (!eventList.empty()) {
@@ -115,6 +171,7 @@ int main (int argc, char* argv[]) {
         // get next event
         curEvent = eventList.top();
         eventList.pop();
+        simClock = curEvent.get_process_time();
     }
 
     return 0;
@@ -151,6 +208,7 @@ void process_new_green() {
         }
     }
 
+    check_carQueue();
 }
 
 /* 
@@ -176,16 +234,7 @@ void process_yellow() {
     // add Red event right after yellow light time finishes
     eventList.push(Event(simClock + Cross::YELLOW, RedEvent));
 
-    // car logic
-    int carInd = 0;
-    while (carInd < (int)carQueue.size() && carQueue.size() > 0) {
-        if (drive(carQueue[carInd], Cross::YELLOW)) { // can they make it?
-            carQueue.erase(carQueue.begin() + carInd);
-        } else {
-            carQueue[carInd].set_stopped();
-            carInd++;
-        }
-    }
+    
 }
 
 /* 
@@ -206,6 +255,9 @@ void process_red() {
     
     // allow queue of people to walk
     walk(Cross::RED);
+
+    // car logic
+    check_carQueue();
 }
 
 
@@ -322,7 +374,7 @@ void process_check_min(Person* fplb) {
 
 
 /*
-WALK: DETERMINE WHICH PEOPLE WALK
+WALK: process people in the queue to walk during a red light
 */
 // remainTime = remaining time in the red light
 void walk(double remainTime) {
@@ -331,7 +383,7 @@ void walk(double remainTime) {
     // P-7: up to 20 pedestrians can cross in 1 cycle of the Red light
     // we need to have a counter because if there is a person that arrives to the light later in the red light and can make it they should be able to pass
     // iterate through the list of people and see if their walking time will be able to reach 
-    while (!personQueue.empty() && numWalked < Cross::MAX_WALK && currInd < (int)personQueue.size()) {
+    while (!personQueue.empty() && numWalked < Cross::MAX_WALK_NUM && currInd < (int)personQueue.size()) {
         if (personQueue[currInd]->calc_cross_time() < remainTime) {
             // remove the person from the queue
             personQueue.erase(personQueue.begin() + currInd);
@@ -367,27 +419,75 @@ void process_car_enter(Car* currCar) {
     }
 }
 
-/*
-DRIVE: Determine which cars can cross in the current light time
-*/ // time = duration of current light
-bool drive(Car car, double time) {
-    double speedMPH = car.get_speed();
+// called only during processing start of red event and new green event
+// TODO: silly me forgor to iterate the carInd
+void check_carQueue() {
+    int carInd = 0;
+    while (carInd < (int)carQueue.size() && !carQueue.empty() ) { 
+        if (currLight == NewGreen) {
+            if (check_must_stop(carQueue[carInd])) {carQueue[carInd].set_stopped();}
+            if (carQueue[carInd].get_stopped()) { // Cars that arrived during the previous green or yellow lights and were told to stop or if they arrived during red and needed to stop
+                calc_actual_time(carQueue[carInd]);
+            } else {
+                // cars that didn't stop will have same actual time as optimal time
+                carQueue[carInd].set_actual_time(carQueue[carInd].get_optimal_time());
+            }
 
-    // Convert the input miles per hour to the needed feet per second
-    double speedFPS = ((speedMPH * 5280) / 60) / 60; // 5280 ft in a mile, 60 minutes in an hour, 60 seconds in a minute
+            // all cars leaving get these updated
+            update_car_stats();
+            carQueue.erase(carQueue.begin() + carInd); // pop off, yaaaAAs queen, you go gurl
 
-    // Find how far they can travel since they arrived till the end of the yellow light
-    //double distNeeded = (Cross::B * 3) + (Cross::B / 2) + (Cross::W / 2) + Cross::L;
-    double distTravelled = speedFPS * ((simClock + time) - car.get_enter_time());
+        } else if (currLight == Red) {
+            if (check_must_stop(carQueue[carInd])) {
+                carQueue[carInd].set_stopped();
+            } 
 
-    // decide
-    if (distTravelled >= Cross::MAX_DRIVE) {
-        return true;
+            carInd ++;
+
+        } else { // paranoia else statement that should never technically be called
+            cerr << "Error: check_carQueue() method was called on a " << currLight << " light." << endl;
+            exit(1);
+        }
+
     }
-
-    return false;
 }
 
-void calc_delay(Car car, double time) {
-    
+// actual time = before crosswalk time + deceleration time + wait time + acceleration time + after crosswalk time
+// before crosswalk time = before distance * speed
+// deceleration time = acceleration time = [FILL]
+// after crosswalk time = after distance * speed
+// before distance = Cross::DRIVE_CROSS_FRONT - braking distance
+// after distance = Cross::DRIVE_CROSS_FRONT + braking distance = AKA Cross::DRIVE_CROSS_END - braking distance
+void calc_actual_time(Car& car) {
+    // Find distances
+    double changingSpeedDist = (car.get_speed() * car.get_speed()) / (2 * Cross::ACC); // the distance the car travels while accelerating or deccelerating
+    double constBeforeDist = Cross::DRIVE_CROSS_FRONT - changingSpeedDist; // the distance the car travels while going a constant speed
+    double constAfterDist = Cross::DRIVE_CROSS_END - changingSpeedDist;
+
+    // Convert distances to time durations
+    double changingSpeedTime = car.get_speed() / Cross::ACC;
+    double constBeforeTime = constBeforeDist / car.get_speed();
+    double constAfterTime = constAfterDist / car.get_speed();
+
+    // this only works if this is only called at a new green light when the car drives off
+    // if this is a green light, the simClock time will be the end of the cars wait time
+    double stoppedTime = simClock - (car.get_enter_time() + changingSpeedTime + constBeforeTime);
+
+    // Set the new actual time
+    double actualTime = (changingSpeedTime * 2) + constBeforeTime + constAfterTime + stoppedTime;
+    car.set_actual_time(actualTime);
+}
+
+bool check_must_stop(Car& car) {
+    // distance traveled = speed * time elapsed
+    double distTraveled = car.get_speed() * (simClock - car.get_enter_time());
+    if (distTraveled >= Cross::DRIVE_CROSS_END) {
+        return false;
+    }
+
+    return true;
+}
+
+void update_car_stats() {
+
 }
