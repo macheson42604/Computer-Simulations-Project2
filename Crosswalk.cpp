@@ -490,7 +490,7 @@ void check_carQueue() {
 // after distance = Cross::DRIVE_CROSS_FRONT + braking distance = AKA Cross::DRIVE_CROSS_END - braking distance
 void calc_actual_time(Car& car) {
     // Find distances
-    double changingSpeedDist = (car.get_speed() * car.get_speed()) / (2 * Cross::ACC); // the distance the car travels while accelerating or deccelerating
+    double changingSpeedDist = (car.get_speed() * car.get_speed()) / (2.0 * Cross::ACC); // the distance the car travels while accelerating or deccelerating
     double constBeforeDist = Cross::DRIVE_CROSS_FRONT - changingSpeedDist; // the distance the car travels while going a constant speed
     double constAfterDist = Cross::DRIVE_CROSS_END - changingSpeedDist;
 
@@ -506,8 +506,8 @@ void calc_actual_time(Car& car) {
     if (stoppedTime < 0) { car.set_is_stopped_neg(); }
     
 
-    // Set the new actual time
-    double actualTime = (changingSpeedTime * 2) + constBeforeTime + constAfterTime + stoppedTime;
+    // Set the new actual time = time elapse + car enter time
+    double actualTime = (changingSpeedTime * 2.0) + constBeforeTime + constAfterTime + stoppedTime + car.get_enter_time();
     car.set_actual_time(actualTime);
 }
 

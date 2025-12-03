@@ -19,6 +19,7 @@ Create a test file
 
 Run test file
 - `./SIM [Q] ./tests/[file1] ./tests/[file2] ./tests/[file3]`
+- Ex. `./SIM 500 ./tests/test.dat ./tests/test.dat ./tests/test.dat`
 
 ## Grading (Graphs)
 - `~/tmp/Crosswalk-simple/grader.sh`

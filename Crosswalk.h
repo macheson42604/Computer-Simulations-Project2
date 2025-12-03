@@ -38,18 +38,18 @@ CROSSWALK: NOT A CLASS
 
 // Constants
 namespace Cross {
-    constexpr int B = 330;
-    constexpr int W = 24;
-    constexpr int S = 46;
-    constexpr int RED = 18;
-    constexpr int YELLOW = 8;
-    constexpr int GREEN = 35;
-    constexpr int LAMBDA_P = 3;
-    constexpr int LAMBDA_A = 4;
-    constexpr int L = 9;
-    constexpr int ACC = 10;
-    constexpr int VJ_A = 25;
-    constexpr int VJ_B = 35;
+    constexpr double B = 330.0;
+    constexpr double W = 24.0;
+    constexpr double S = 46.0;
+    constexpr double RED = 18.0;
+    constexpr double YELLOW = 8.0;
+    constexpr double GREEN = 35.0;
+    constexpr double LAMBDA_P = 3.0;
+    constexpr double LAMBDA_A = 4.0;
+    constexpr double L = 9.0;
+    constexpr double ACC = 10.0;
+    constexpr double VJ_A = 25.0;
+    constexpr double VJ_B = 35.0;
     constexpr double VK_A = 2.6;
     constexpr double VK_B = 4.1;
     constexpr double MIN_DOUBLE = std::numeric_limits<double>::denorm_min();

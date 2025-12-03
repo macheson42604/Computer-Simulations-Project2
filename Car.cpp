@@ -15,7 +15,7 @@ Car::Car(double time, Direction travelDir, int nC) {
 
     // calculate speed (mph -> ft/s) no need to keep speed at mph
     // speed_fts = speed_mph * (5280 / 3600)
-    speed = get_uniform(Cross::VJ_A, Cross::VJ_B, autoTraceStream) * (5280 / 3600);
+    speed = get_uniform(Cross::VJ_A, Cross::VJ_B, autoTraceStream) * (5280.0 / 3600.0);
 
     // calculate optimal time (if the car traveled at its constant speed)
     // time elapsed = total distance / speed
