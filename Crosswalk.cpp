@@ -455,8 +455,8 @@ void check_carQueue() {
     int carInd = 0;
     while (carInd < (int)carQueue.size() && !carQueue.empty() ) { 
         if (currLight == LightType::NewGreen) {
-            if (check_must_stop(carQueue[carInd])) {carQueue[carInd].set_stopped();}
-            if (carQueue[carInd].get_stopped()) { // Cars that arrived during the previous green or yellow lights and were told to stop or if they arrived during red and needed to stop
+            if (carQueue[carInd].get_stopped() || (!check_must_stop(carQueue[carInd], Cross::DRIVE_CROSS_FRONT) && !carQueue[carInd].get_left())) { // Cars that arrived during the previous green or yellow lights and were told to stop or if they arrived during red and needed to stop
+                carQueue[carInd].set_stopped();
                 calc_actual_time(carQueue[carInd]);
             } else {
                 // DEBUG
@@ -472,17 +472,20 @@ void check_carQueue() {
 
             // DEBUG
             cout << "simClock: " << simClock << " | curr Light: " << get_light() << 
-            "| car id: " << carQueue[carInd].get_id() << " | car delay: " << carQueue[carInd].calc_delay() << endl;
+            "| car id: " << carQueue[carInd].get_id() << " | car enter time: " << carQueue[carInd].get_enter_time() << " | car delay: " << carQueue[carInd].calc_delay() << endl;
             
 
             carQueue.erase(carQueue.begin() + carInd); // pop off, yaaaAAs queen, you go gurl
 
         } else if (currLight == LightType::Red) {            
-            if (check_must_stop(carQueue[carInd])) {
+            if (check_must_stop(carQueue[carInd], Cross::DRIVE_CROSS_END)) {
                 // DEBUG
                 // cout << "Car: " << carQueue[carInd].get_id() << " stopped | ";
-                // carQueue[carInd].set_stopped();
-            } 
+                carQueue[carInd].set_stopped();
+            } else {
+                carQueue[carInd].set_left();
+                carQueue[carInd].set_actual_time(carQueue[carInd].get_optimal_time());
+            }
 
             carInd ++;
 
@@ -526,14 +529,14 @@ void calc_actual_time(Car& car) {
     car.set_actual_time(actualTime);
 }
 
-bool check_must_stop(Car& car) {
+bool check_must_stop(Car& car, double dist) {
     // distance traveled = speed * time elapsed
     double distTraveled = car.get_speed() * (simClock - car.get_enter_time());
-    if (distTraveled >= Cross::DRIVE_CROSS_END) {
-        return true;
+    if (distTraveled >= dist) {
+        return false;
     }
 
-    return false;
+    return true;
 }
 
 

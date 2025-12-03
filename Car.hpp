@@ -55,6 +55,7 @@ class Car {
         double optimalTime;
         int id;
         bool isStoppedTimeNeg = false; //edge case: if stopped time becomes negative in calc, we technically allow actualTime < optimalTime 
+        bool left = false;
 
     public:
         Car(double, Direction, int);
@@ -69,11 +70,13 @@ class Car {
         double get_optimal_time();
         int get_id();
         bool get_is_stopped_neg();
+        bool get_left();
 
         // SETTERS
         void set_stopped();
         void set_actual_time(double);
         void set_is_stopped_neg();
+        void set_left();
         
 
 

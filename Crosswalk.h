@@ -62,7 +62,7 @@ namespace Cross {
     constexpr double DRIVE_CROSS_END = (Cross::B * 3.5) + (Cross::S * 3) + (Cross::W * 0.5) + Cross::L; 
     // front of car is at start of crosswalk = 3.5 blocks + 3 streets - 0.5 sidewalk width
     constexpr double DRIVE_CROSS_FRONT = (Cross::B * 3.5) + (Cross::S * 3) - (Cross::W * 0.5);
-    // total distance car must travel = 7 blocks + 6 streets + 1 car length
+    // total distance car must travel = 7 blocks + 6 streets
     constexpr double TOTAL_DRIVE_DIST = (Cross::B * 7) + (Cross::S * 6);
     // QUESTION - exit simulation when front of car reaches end or back of car?
     // ANSWER - when the front of the car reached the end
@@ -105,7 +105,7 @@ void walk(double remainTime);
 void process_car_enter(Car*);
 void check_carQueue();
 void calc_actual_time(Car&);
-bool check_must_stop(Car&);
+bool check_must_stop(Car&, double);
 void update_car_stats(Car&);
 void update_person_stats(Person*);
 void output_stats();

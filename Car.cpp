@@ -76,6 +76,10 @@ bool Car::get_is_stopped_neg() {
     return isStoppedTimeNeg;
 }
 
+bool Car::get_left() {
+    return left;
+}
+
 // SETTERS
 
 // we technically don't need to set isStopped to false again because the car will already be popped off the queue by then
@@ -90,4 +94,8 @@ void Car::set_actual_time(double aT) {
 // only ever set to true (defaulted to false)
 void Car::set_is_stopped_neg() {
     isStoppedTimeNeg = true;
+}
+
+void Car::set_left() {
+    left = true;
 }
