@@ -307,14 +307,14 @@ void process_person_arrive(Person* arrPerson) {
 
     // check the light to determine behavior
     // P-6A: press the button only if signal is a NO WALK state (aka as long as the light is not Red)
-    if (currLight != Red) { 
+    if (currLight != LightType::Red) { 
         // determine if the person is going to push the button
         if (should_press(personQueue.size())) {
             // set pressed button to true
             isPressed = true;
 
             // process yellow event immediately if the green light is already expired
-            if (currLight == ExpGreen) {
+            if (currLight == LightType::ExpGreen) {
                 eventList.push(Event(simClock + Cross::MIN_DOUBLE, YellowEvent));
             }
         }
