@@ -470,16 +470,16 @@ void check_carQueue() {
 
 
             // DEBUG
-            if (carQueue[carInd].get_id() == 23) {
+            //if (carQueue[carInd].get_id() == 23) {
             //cout << "simClock: " << simClock << " | curr Light: " << get_light() << 
             //"| car id: " << carQueue[carInd].get_id() << " | car enter time: " << carQueue[carInd].get_enter_time() << " | car exit time: " << carQueue[carInd].get_actual_time() << " | car delay: " << carQueue[carInd].calc_delay() << endl;
-                cout << "simClock: " << simClock << endl;
-                cout << "curr Light: " << get_light() << endl;
-                cout << "car id: " << carQueue[carInd].get_id() << endl;
-                cout << "car enter time: " << carQueue[carInd].get_enter_time() << endl;
-                cout << "car exit time: " << carQueue[carInd].get_actual_time() << endl;
-                cout << "car delay: " << carQueue[carInd].calc_delay() << endl;
-            }
+            //    cout << "simClock: " << simClock << endl;
+            //    cout << "curr Light: " << get_light() << endl;
+            //    cout << "car id: " << carQueue[carInd].get_id() << endl;
+            //    cout << "car enter time: " << carQueue[carInd].get_enter_time() << endl;
+            //    cout << "car exit time: " << carQueue[carInd].get_actual_time() << endl;
+            //    cout << "car delay: " << carQueue[carInd].calc_delay() << endl;
+            //}
             
 
             carQueue.erase(carQueue.begin() + carInd); // pop off, yaaaAAs queen, you go gurl
@@ -516,12 +516,6 @@ void check_carQueue() {
 // before distance = Cross::DRIVE_CROSS_FRONT - braking distance
 // after distance = Cross::DRIVE_CROSS_FRONT + braking distance = AKA Cross::DRIVE_CROSS_END - braking distance
 void calc_actual_time(Car& car) {
-
-    if (car.get_id() == 23) {
-        cout << "Speed: " << car.get_speed() << endl;
-        cout << "FRONT: " << Cross::DRIVE_CROSS_FRONT << endl;
-        cout << "END: " << Cross::DRIVE_CROSS_END << endl;
-    }
     // Find distances
     double changingSpeedDist = (car.get_speed() * car.get_speed()) / (2.0 * Cross::ACC); // the distance the car travels while accelerating or deccelerating
     double constBeforeDist = Cross::DRIVE_CROSS_FRONT - changingSpeedDist; // the distance the car travels while going a constant speed
