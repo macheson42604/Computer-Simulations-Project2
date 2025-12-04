@@ -1,0 +1,811 @@
+# This event log is for simulations written with two arrival processes each for
+# autos and pedestrians (for the east and west flows), which means you're using
+# the arrival rates in the write-up. Notice this means there will be two
+# "copies" of each ped and auto in your sim with identical metrics.  This
+# doesn't mean your sim is incorrectly designed (of course not, because you'll
+# see the same duplicates in this log file).
+#
+# You can reproduce an identical event stream and compare your critical sim values
+# with what is in this file by running
+#
+#  $ bash ./HINT2i
+#
+# in the same directory as your as your SIM (and assuming you've saved this
+# file as HINTS2i) alongside your SIM.  If you're curious about this sort of
+# magic, look at the last line of this file...
+#
+# The format of this file should be self-explanatory if you are familiar with
+# the semantics of CrosswalkSim.  The first numerical value per line is the
+# current simulation clock value (t) in seconds.  If you are unsure of the ?_j
+# and g_b terms for autos, you should examine the 'Calculating Delays' portion
+# of the write up more closely, particularly the v(j) vs t figure.
+#
+# NOTICE! that in my own implementation I determine which cars will be delayed
+# when a YELLOW light begins (since the transition to the subsequent RED and
+# GREEN light can be easily calculated) or when there is an auto arrival during
+# YELLOW or RED light.  It _doesn't_matter_ when (how) in your sim you detect
+# delayed autos and calculate their delay values. If you're doing it correctly
+# you will get identical values as in this log file for each auto.
+#
+# ALSO! notice that I DO NOT print out the delay calculations for autos that
+# are NOT delayed, nor the arrival events for either peds or autos.  These just
+# seemed like clutter to me.
+#
+#    126.10175 ped_at_button dir=0 num=1 arrives with 0 other peds queued up; ignores button
+#    126.10175 ped_at_button dir=1 num=2 arrives with 1 other peds queued up; ignores button
+#    139.96469 ped_at_button dir=0 num=3 arrives with 2 other peds queued up; ignores button
+#    139.96469 ped_at_button dir=1 num=4 arrives with 3 other peds queued up; ignores button
+#    153.82764 ped_at_button dir=1 num=6 arrives with 4 other peds queued up; ignores button
+#    153.82764 ped_at_button dir=0 num=5 arrives with 5 other peds queued up; ignores button
+#    167.69058 ped_at_button dir=1 num=8 arrives with 6 other peds queued up; ignores button
+#    167.69058 ped_at_button dir=0 num=7 arrives with 7 other peds queued up; ignores button
+#    181.55352 ped_at_button dir=0 num=9 arrives with 8 other peds queued up; ignores button
+#    181.55352 ped_at_button dir=1 num=10 arrives with 9 other peds queued up; ignores button
+#    186.10175 ped_impatient
+#    186.10175 yellow_begins auto dir=1 num=34 v_j=44.00000 ft/s e_j=176.75253 b_j=96.80000 t_j=4.40000 h_j=208.06617 g_b=212.10175 delay=8.43558
+#    186.10175 yellow_begins auto dir=0 num=33 v_j=44.00000 ft/s e_j=176.75253 b_j=96.80000 t_j=4.40000 h_j=208.06617 g_b=212.10175 delay=8.43558
+#    186.10175 yellow_begins auto dir=1 num=32 v_j=44.00000 ft/s e_j=166.35532 b_j=96.80000 t_j=4.40000 h_j=197.66896 g_b=212.10175 delay=18.83279
+#    186.10175 yellow_begins auto dir=0 num=31 v_j=44.00000 ft/s e_j=166.35532 b_j=96.80000 t_j=4.40000 h_j=197.66896 g_b=212.10175 delay=18.83279
+#    186.10175 ped_impatient
+#    194.10175 yellow_expires, safety_signal is now RED_LIGHT
+#    194.10175 yellow_expires ped dir=0 num=1 crosses street exits at 207.83309
+#    194.10175 yellow_expires ped dir=1 num=2 crosses street exits at 207.83309
+#    194.10175 yellow_expires ped dir=0 num=3 crosses street exits at 207.83309
+#    194.10175 yellow_expires ped dir=1 num=4 crosses street exits at 207.83309
+#    194.10175 yellow_expires ped dir=1 num=6 crosses street exits at 207.83309
+#    194.10175 yellow_expires ped dir=0 num=5 crosses street exits at 207.83309
+#    194.10175 yellow_expires ped dir=1 num=8 crosses street exits at 207.83309
+#    194.10175 yellow_expires ped dir=0 num=7 crosses street exits at 207.83309
+#    194.10175 yellow_expires ped dir=0 num=9 crosses street exits at 207.83309
+#    194.10175 yellow_expires ped dir=1 num=10 crosses street exits at 207.83309
+#    195.41647 ped_at_button dir=1 num=12 crosses on red will exit at 209.14781
+#    195.41647 ped_at_button dir=0 num=11 crosses on red will exit at 209.14781
+#    207.83309 ped_exit dir=1 num=8 delay=26.41117
+#    207.83309 ped_exit dir=0 num=9 delay=12.54823
+#    207.83309 ped_exit dir=0 num=7 delay=26.41117
+#    207.83309 ped_exit dir=0 num=1 delay=68.00000
+#    207.83309 ped_exit dir=0 num=3 delay=54.13706
+#    207.83309 ped_exit dir=1 num=6 delay=40.27411
+#    207.83309 ped_exit dir=1 num=4 delay=54.13706
+#    207.83309 ped_exit dir=1 num=2 delay=68.00000
+#    207.83309 ped_exit dir=1 num=10 delay=12.54823
+#    207.83309 ped_exit dir=0 num=5 delay=40.27411
+#    209.14781 ped_exit dir=0 num=11 delay=-0.00000
+#    209.14781 ped_exit dir=1 num=12 delay=-0.00000
+#    209.27941 ped_at_button dir=1 num=14 does not have time to cross (red ends at 212.10175 < would exit xwalk at 223.01075)
+#    209.27941 ped_at_button dir=0 num=13 does not have time to cross (red ends at 212.10175 < would exit xwalk at 223.01075)
+#    212.10175 red_expires, safety_signal is now MIN_GREEN_LIGHT_NOREQUEST
+#    212.10175 red_expires residual ped dir=0 num=13 speed=3.35000 ignores button
+#    212.10175 red_expires residual ped dir=1 num=14 speed=3.35000 ignores button
+#    223.14235 ped_at_button dir=0 num=15 arrives with 2 other peds queued up; ignores button
+#    223.14235 ped_at_button dir=1 num=16 arrives with 3 other peds queued up; ignores button
+#    225.12805 auto_exit exit=1 num=32 delay=18.83279
+#    225.12805 auto_exit exit=0 num=31 delay=18.83279
+#    235.52526 auto_exit exit=1 num=34 delay=8.43558
+#    235.52526 auto_exit exit=0 num=33 delay=8.43558
+#    237.00530 ped_at_button dir=0 num=17 arrives with 4 other peds queued up; ignores button
+#    237.00530 ped_at_button dir=1 num=18 arrives with 5 other peds queued up; ignores button
+#    247.10175 green_expires with safety signal in MIN_GREEN_LIGHT_NOREQUEST state
+#    250.86824 ped_at_button dir=1 num=20 arrives with 6 other peds queued up; ignores button
+#    250.86824 ped_at_button dir=0 num=19 arrives with 7 other peds queued up; ignores button
+#    264.73119 ped_at_button dir=1 num=22 arrives with 8 other peds queued up; ignores button
+#    264.73119 ped_at_button dir=0 num=21 arrives with 9 other peds queued up; ignores button
+#    272.10175 ped_impatient
+#    272.10175 yellow_begins auto dir=0 num=49 v_j=44.00000 ft/s e_j=259.93019 b_j=96.80000 t_j=4.40000 h_j=291.24383 g_b=298.10175 delay=11.25792
+#    272.10175 yellow_begins auto dir=1 num=50 v_j=44.00000 ft/s e_j=259.93019 b_j=96.80000 t_j=4.40000 h_j=291.24383 g_b=298.10175 delay=11.25792
+#    272.10175 ped_impatient
+#    278.59413 ped_at_button dir=0 num=23 arrives with 10 other peds queued up; ignores button
+#    278.59413 ped_at_button dir=1 num=24 arrives with 11 other peds queued up; ignores button
+#    280.10175 yellow_expires, safety_signal is now RED_LIGHT
+#    280.10175 yellow_expires ped dir=1 num=14 crosses street exits at 293.83309
+#    280.10175 yellow_expires ped dir=0 num=13 crosses street exits at 293.83309
+#    280.10175 yellow_expires ped dir=0 num=15 crosses street exits at 293.83309
+#    280.10175 yellow_expires ped dir=1 num=16 crosses street exits at 293.83309
+#    280.10175 yellow_expires ped dir=0 num=17 crosses street exits at 293.83309
+#    280.10175 yellow_expires ped dir=1 num=18 crosses street exits at 293.83309
+#    280.10175 yellow_expires ped dir=1 num=20 crosses street exits at 293.83309
+#    280.10175 yellow_expires ped dir=0 num=19 crosses street exits at 293.83309
+#    280.10175 yellow_expires ped dir=1 num=22 crosses street exits at 293.83309
+#    280.10175 yellow_expires ped dir=0 num=21 crosses street exits at 293.83309
+#    280.10175 yellow_expires ped dir=0 num=23 crosses street exits at 293.83309
+#    280.10175 yellow_expires ped dir=1 num=24 crosses street exits at 293.83309
+#    292.45707 ped_at_button dir=0 num=25 does not have time to cross (red ends at 298.10175 < would exit xwalk at 306.18842)
+#    292.45707 ped_at_button dir=1 num=26 does not have time to cross (red ends at 298.10175 < would exit xwalk at 306.18842)
+#    293.83309 ped_exit dir=1 num=20 delay=29.23351
+#    293.83309 ped_exit dir=0 num=23 delay=1.50762
+#    293.83309 ped_exit dir=1 num=18 delay=43.09645
+#    293.83309 ped_exit dir=1 num=24 delay=1.50762
+#    293.83309 ped_exit dir=0 num=21 delay=15.37056
+#    293.83309 ped_exit dir=0 num=19 delay=29.23351
+#    293.83309 ped_exit dir=1 num=22 delay=15.37056
+#    293.83309 ped_exit dir=0 num=13 delay=70.82234
+#    293.83309 ped_exit dir=0 num=17 delay=43.09645
+#    293.83309 ped_exit dir=0 num=15 delay=56.95939
+#    293.83309 ped_exit dir=1 num=16 delay=56.95939
+#    293.83309 ped_exit dir=1 num=14 delay=70.82234
+#    298.10175 red_expires, safety_signal is now MIN_GREEN_LIGHT_NOREQUEST
+#    298.10175 red_expires residual ped dir=1 num=26 speed=3.35000 ignores button
+#    298.10175 red_expires residual ped dir=0 num=25 speed=3.35000 ignores button
+#    306.32002 ped_at_button dir=0 num=27 arrives with 2 other peds queued up; ignores button
+#    306.32002 ped_at_button dir=1 num=28 arrives with 3 other peds queued up; ignores button
+#    318.70292 auto_exit exit=1 num=50 delay=11.25792
+#    318.70292 auto_exit exit=0 num=49 delay=11.25792
+#    320.18296 ped_at_button dir=1 num=30 arrives with 4 other peds queued up; ignores button
+#    320.18296 ped_at_button dir=0 num=29 arrives with 5 other peds queued up; ignores button
+#    333.10175 green_expires with safety signal in MIN_GREEN_LIGHT_NOREQUEST state
+#    334.04590 ped_at_button dir=1 num=32 arrives with 6 other peds queued up; ignores button
+#    334.04590 ped_at_button dir=0 num=31 arrives with 7 other peds queued up; ignores button
+#    347.90885 ped_at_button dir=1 num=34 arrives with 8 other peds queued up; pushes button
+#    347.90885 yellow_begins auto dir=1 num=66 v_j=44.00000 ft/s e_j=343.10785 b_j=96.80000 t_j=4.40000 h_j=374.42149 g_b=373.90885 delay=3.88736
+#    347.90885 yellow_begins auto dir=0 num=65 v_j=44.00000 ft/s e_j=343.10785 b_j=96.80000 t_j=4.40000 h_j=374.42149 g_b=373.90885 delay=3.88736
+#    347.90885 yellow_begins auto dir=1 num=64 v_j=44.00000 ft/s e_j=332.71065 b_j=96.80000 t_j=4.40000 h_j=364.02428 g_b=373.90885 delay=14.28456
+#    347.90885 yellow_begins auto dir=0 num=63 v_j=44.00000 ft/s e_j=332.71065 b_j=96.80000 t_j=4.40000 h_j=364.02428 g_b=373.90885 delay=14.28456
+#    347.90885 ped_at_button dir=0 num=33 arrives with 9 other peds queued up; ignores button
+#    355.90885 yellow_expires, safety_signal is now RED_LIGHT
+#    355.90885 yellow_expires ped dir=0 num=25 crosses street exits at 369.64019
+#    355.90885 yellow_expires ped dir=1 num=26 crosses street exits at 369.64019
+#    355.90885 yellow_expires ped dir=0 num=27 crosses street exits at 369.64019
+#    355.90885 yellow_expires ped dir=1 num=28 crosses street exits at 369.64019
+#    355.90885 yellow_expires ped dir=1 num=30 crosses street exits at 369.64019
+#    355.90885 yellow_expires ped dir=0 num=29 crosses street exits at 369.64019
+#    355.90885 yellow_expires ped dir=1 num=32 crosses street exits at 369.64019
+#    355.90885 yellow_expires ped dir=0 num=31 crosses street exits at 369.64019
+#    355.90885 yellow_expires ped dir=1 num=34 crosses street exits at 369.64019
+#    355.90885 yellow_expires ped dir=0 num=33 crosses street exits at 369.64019
+#    361.77179 ped_at_button dir=1 num=36 does not have time to cross (red ends at 373.90885 < would exit xwalk at 375.50313)
+#    361.77179 ped_at_button dir=0 num=35 does not have time to cross (red ends at 373.90885 < would exit xwalk at 375.50313)
+#    369.64019 ped_exit dir=1 num=34 delay=8.00000
+#    369.64019 ped_exit dir=0 num=33 delay=8.00000
+#    369.64019 ped_exit dir=1 num=30 delay=35.72589
+#    369.64019 ped_exit dir=1 num=32 delay=21.86294
+#    369.64019 ped_exit dir=0 num=29 delay=35.72589
+#    369.64019 ped_exit dir=0 num=25 delay=63.45177
+#    369.64019 ped_exit dir=0 num=27 delay=49.58883
+#    369.64019 ped_exit dir=1 num=26 delay=63.45177
+#    369.64019 ped_exit dir=0 num=31 delay=21.86294
+#    369.64019 ped_exit dir=1 num=28 delay=49.58883
+#    373.90885 red_expires, safety_signal is now MIN_GREEN_LIGHT_NOREQUEST
+#    373.90885 red_expires residual ped dir=0 num=35 speed=3.35000 ignores button
+#    373.90885 red_expires residual ped dir=1 num=36 speed=3.35000 ignores button
+#    375.63473 ped_at_button dir=0 num=37 arrives with 2 other peds queued up; ignores button
+#    375.63473 ped_at_button dir=1 num=38 arrives with 3 other peds queued up; ignores button
+#    389.49768 ped_at_button dir=1 num=40 arrives with 4 other peds queued up; ignores button
+#    389.49768 ped_at_button dir=0 num=39 arrives with 5 other peds queued up; ignores button
+#    391.48337 auto_exit exit=1 num=64 delay=14.28456
+#    391.48337 auto_exit exit=0 num=63 delay=14.28456
+#    401.88058 auto_exit exit=1 num=66 delay=3.88736
+#    401.88058 auto_exit exit=0 num=65 delay=3.88736
+#    403.36062 ped_at_button dir=1 num=42 arrives with 6 other peds queued up; ignores button
+#    403.36062 ped_at_button dir=0 num=41 arrives with 7 other peds queued up; ignores button
+#    408.90885 green_expires with safety signal in MIN_GREEN_LIGHT_NOREQUEST state
+#    417.22357 ped_at_button dir=1 num=44 arrives with 8 other peds queued up; ignores button
+#    417.22357 ped_at_button dir=0 num=43 arrives with 9 other peds queued up; ignores button
+#    431.08651 ped_at_button dir=1 num=46 arrives with 10 other peds queued up; ignores button
+#    431.08651 ped_at_button dir=0 num=45 arrives with 11 other peds queued up; ignores button
+#    433.90885 ped_impatient
+#    433.90885 yellow_begins auto dir=1 num=82 v_j=44.00000 ft/s e_j=426.28552 b_j=96.80000 t_j=4.40000 h_j=457.59915 g_b=459.90885 delay=6.70969
+#    433.90885 yellow_begins auto dir=0 num=81 v_j=44.00000 ft/s e_j=426.28552 b_j=96.80000 t_j=4.40000 h_j=457.59915 g_b=459.90885 delay=6.70969
+#    433.90885 yellow_begins auto dir=1 num=80 v_j=44.00000 ft/s e_j=415.88831 b_j=96.80000 t_j=4.40000 h_j=447.20194 g_b=459.90885 delay=17.10690
+#    433.90885 yellow_begins auto dir=0 num=79 v_j=44.00000 ft/s e_j=415.88831 b_j=96.80000 t_j=4.40000 h_j=447.20194 g_b=459.90885 delay=17.10690
+#    433.90885 ped_impatient
+#    435.63473 ped_impatient
+#    435.63473 ped_impatient
+#    441.90885 yellow_expires, safety_signal is now RED_LIGHT
+#    441.90885 yellow_expires ped dir=1 num=36 crosses street exits at 455.64019
+#    441.90885 yellow_expires ped dir=0 num=35 crosses street exits at 455.64019
+#    441.90885 yellow_expires ped dir=0 num=37 crosses street exits at 455.64019
+#    441.90885 yellow_expires ped dir=1 num=38 crosses street exits at 455.64019
+#    441.90885 yellow_expires ped dir=1 num=40 crosses street exits at 455.64019
+#    441.90885 yellow_expires ped dir=0 num=39 crosses street exits at 455.64019
+#    441.90885 yellow_expires ped dir=1 num=42 crosses street exits at 455.64019
+#    441.90885 yellow_expires ped dir=0 num=41 crosses street exits at 455.64019
+#    441.90885 yellow_expires ped dir=1 num=44 crosses street exits at 455.64019
+#    441.90885 yellow_expires ped dir=0 num=43 crosses street exits at 455.64019
+#    441.90885 yellow_expires ped dir=1 num=46 crosses street exits at 455.64019
+#    441.90885 yellow_expires ped dir=0 num=45 crosses street exits at 455.64019
+#    444.94945 ped_at_button dir=0 num=47 crosses on red will exit at 458.68080
+#    444.94945 ped_at_button dir=1 num=48 crosses on red will exit at 458.68080
+#    455.64019 ped_exit dir=0 num=39 delay=52.41117
+#    455.64019 ped_exit dir=1 num=42 delay=38.54823
+#    455.64019 ped_exit dir=1 num=46 delay=10.82234
+#    455.64019 ped_exit dir=0 num=45 delay=10.82234
+#    455.64019 ped_exit dir=0 num=41 delay=38.54823
+#    455.64019 ped_exit dir=1 num=44 delay=24.68528
+#    455.64019 ped_exit dir=1 num=40 delay=52.41117
+#    455.64019 ped_exit dir=0 num=37 delay=66.27411
+#    455.64019 ped_exit dir=0 num=35 delay=80.13706
+#    455.64019 ped_exit dir=1 num=36 delay=80.13706
+#    455.64019 ped_exit dir=0 num=43 delay=24.68528
+#    455.64019 ped_exit dir=1 num=38 delay=66.27411
+#    458.68080 ped_exit dir=1 num=48 delay=-0.00000
+#    458.68080 ped_exit dir=0 num=47 delay=-0.00000
+#    458.81240 ped_at_button dir=1 num=50 does not have time to cross (red ends at 459.90885 < would exit xwalk at 472.54374)
+#    458.81240 ped_at_button dir=0 num=49 does not have time to cross (red ends at 459.90885 < would exit xwalk at 472.54374)
+#    459.90885 red_expires, safety_signal is now MIN_GREEN_LIGHT_NOREQUEST
+#    459.90885 red_expires residual ped dir=0 num=49 speed=3.35000 ignores button
+#    459.90885 red_expires residual ped dir=1 num=50 speed=3.35000 ignores button
+#    472.67534 ped_at_button dir=1 num=52 arrives with 2 other peds queued up; ignores button
+#    472.67534 ped_at_button dir=0 num=51 arrives with 3 other peds queued up; ignores button
+#    474.66104 auto_exit exit=1 num=80 delay=17.10690
+#    474.66104 auto_exit exit=0 num=79 delay=17.10690
+#    485.05824 auto_exit exit=0 num=81 delay=6.70969
+#    485.05824 auto_exit exit=1 num=82 delay=6.70969
+#    486.53828 ped_at_button dir=1 num=54 arrives with 4 other peds queued up; ignores button
+#    486.53828 ped_at_button dir=0 num=53 arrives with 5 other peds queued up; ignores button
+#    494.90885 green_expires with safety signal in MIN_GREEN_LIGHT_NOREQUEST state
+#    500.40123 ped_at_button dir=0 num=55 arrives with 6 other peds queued up; ignores button
+#    500.40123 ped_at_button dir=1 num=56 arrives with 7 other peds queued up; ignores button
+#    514.26417 ped_at_button dir=1 num=58 arrives with 8 other peds queued up; ignores button
+#    514.26417 ped_at_button dir=0 num=57 arrives with 9 other peds queued up; ignores button
+#    519.90885 ped_impatient
+#    519.90885 yellow_begins auto dir=1 num=98 v_j=44.00000 ft/s e_j=509.46318 b_j=96.80000 t_j=4.40000 h_j=540.77681 g_b=545.90885 delay=9.53203
+#    519.90885 yellow_begins auto dir=0 num=97 v_j=44.00000 ft/s e_j=509.46318 b_j=96.80000 t_j=4.40000 h_j=540.77681 g_b=545.90885 delay=9.53203
+#    519.90885 yellow_begins auto dir=1 num=96 v_j=44.00000 ft/s e_j=499.06597 b_j=96.80000 t_j=4.40000 h_j=530.37961 g_b=545.90885 delay=19.92924
+#    519.90885 yellow_begins auto dir=0 num=95 v_j=44.00000 ft/s e_j=499.06597 b_j=96.80000 t_j=4.40000 h_j=530.37961 g_b=545.90885 delay=19.92924
+#    519.90885 ped_impatient
+#    527.90885 yellow_expires, safety_signal is now RED_LIGHT
+#    527.90885 yellow_expires ped dir=1 num=50 crosses street exits at 541.64019
+#    527.90885 yellow_expires ped dir=0 num=49 crosses street exits at 541.64019
+#    527.90885 yellow_expires ped dir=1 num=52 crosses street exits at 541.64019
+#    527.90885 yellow_expires ped dir=0 num=51 crosses street exits at 541.64019
+#    527.90885 yellow_expires ped dir=1 num=54 crosses street exits at 541.64019
+#    527.90885 yellow_expires ped dir=0 num=53 crosses street exits at 541.64019
+#    527.90885 yellow_expires ped dir=0 num=55 crosses street exits at 541.64019
+#    527.90885 yellow_expires ped dir=1 num=56 crosses street exits at 541.64019
+#    527.90885 yellow_expires ped dir=1 num=58 crosses street exits at 541.64019
+#    527.90885 yellow_expires ped dir=0 num=57 crosses street exits at 541.64019
+#    528.12711 ped_at_button dir=1 num=60 crosses on red will exit at 541.85846
+#    528.12711 ped_at_button dir=0 num=59 crosses on red will exit at 541.85846
+#    541.64019 ped_exit dir=0 num=55 delay=27.50762
+#    541.64019 ped_exit dir=1 num=56 delay=27.50762
+#    541.64019 ped_exit dir=1 num=58 delay=13.64468
+#    541.64019 ped_exit dir=0 num=57 delay=13.64468
+#    541.64019 ped_exit dir=1 num=54 delay=41.37056
+#    541.64019 ped_exit dir=1 num=52 delay=55.23351
+#    541.64019 ped_exit dir=0 num=51 delay=55.23351
+#    541.64019 ped_exit dir=1 num=50 delay=69.09645
+#    541.64019 ped_exit dir=0 num=49 delay=69.09645
+#    541.64019 ped_exit dir=0 num=53 delay=41.37056
+#    541.85846 ped_exit dir=1 num=60 delay=-0.00000
+#    541.85846 ped_exit dir=0 num=59 delay=-0.00000
+#    541.99006 ped_at_button dir=1 num=62 does not have time to cross (red ends at 545.90885 < would exit xwalk at 555.72140)
+#    541.99006 ped_at_button dir=0 num=61 does not have time to cross (red ends at 545.90885 < would exit xwalk at 555.72140)
+#    545.90885 red_expires, safety_signal is now MIN_GREEN_LIGHT_NOREQUEST
+#    545.90885 red_expires residual ped dir=0 num=61 speed=3.35000 ignores button
+#    545.90885 red_expires residual ped dir=1 num=62 speed=3.35000 ignores button
+#    555.85300 ped_at_button dir=0 num=63 arrives with 2 other peds queued up; ignores button
+#    555.85300 ped_at_button dir=1 num=64 arrives with 3 other peds queued up; ignores button
+#    557.83870 auto_exit exit=0 num=95 delay=19.92924
+#    557.83870 auto_exit exit=1 num=96 delay=19.92924
+#    568.23590 auto_exit exit=1 num=98 delay=9.53203
+#    568.23590 auto_exit exit=0 num=97 delay=9.53203
+#    569.71595 ped_at_button dir=1 num=66 arrives with 4 other peds queued up; ignores button
+#    569.71595 ped_at_button dir=0 num=65 arrives with 5 other peds queued up; ignores button
+#    580.90885 green_expires with safety signal in MIN_GREEN_LIGHT_NOREQUEST state
+#    583.57889 ped_at_button dir=0 num=67 arrives with 6 other peds queued up; ignores button
+#    583.57889 ped_at_button dir=1 num=68 arrives with 7 other peds queued up; pushes button
+#    583.57889 yellow_begins auto dir=0 num=109 v_j=44.00000 ft/s e_j=571.84642 b_j=96.80000 t_j=4.40000 h_j=603.16006 g_b=609.57889 delay=10.81883
+#    583.57889 yellow_begins auto dir=1 num=110 v_j=44.00000 ft/s e_j=571.84642 b_j=96.80000 t_j=4.40000 h_j=603.16006 g_b=609.57889 delay=10.81883
+#    591.57889 yellow_expires, safety_signal is now RED_LIGHT
+#    591.57889 yellow_expires ped dir=1 num=62 crosses street exits at 605.31023
+#    591.57889 yellow_expires ped dir=0 num=61 crosses street exits at 605.31023
+#    591.57889 yellow_expires ped dir=0 num=63 crosses street exits at 605.31023
+#    591.57889 yellow_expires ped dir=1 num=64 crosses street exits at 605.31023
+#    591.57889 yellow_expires ped dir=1 num=66 crosses street exits at 605.31023
+#    591.57889 yellow_expires ped dir=0 num=65 crosses street exits at 605.31023
+#    591.57889 yellow_expires ped dir=0 num=67 crosses street exits at 605.31023
+#    591.57889 yellow_expires ped dir=1 num=68 crosses street exits at 605.31023
+#    597.44183 ped_at_button dir=0 num=69 does not have time to cross (red ends at 609.57889 < would exit xwalk at 611.17318)
+#    597.44183 ped_at_button dir=1 num=70 does not have time to cross (red ends at 609.57889 < would exit xwalk at 611.17318)
+#    605.31023 ped_exit dir=0 num=61 delay=49.58883
+#    605.31023 ped_exit dir=1 num=66 delay=21.86294
+#    605.31023 ped_exit dir=0 num=67 delay=8.00000
+#    605.31023 ped_exit dir=0 num=65 delay=21.86294
+#    605.31023 ped_exit dir=0 num=63 delay=35.72589
+#    605.31023 ped_exit dir=1 num=62 delay=49.58883
+#    605.31023 ped_exit dir=1 num=68 delay=8.00000
+#    605.31023 ped_exit dir=1 num=64 delay=35.72589
+#    609.57889 red_expires, safety_signal is now MIN_GREEN_LIGHT_NOREQUEST
+#    609.57889 red_expires residual ped dir=1 num=70 speed=3.35000 ignores button
+#    609.57889 red_expires residual ped dir=0 num=69 speed=3.35000 ignores button
+#    611.30478 ped_at_button dir=1 num=72 arrives with 2 other peds queued up; ignores button
+#    611.30478 ped_at_button dir=0 num=71 arrives with 3 other peds queued up; ignores button
+#    625.16772 ped_at_button dir=1 num=74 arrives with 4 other peds queued up; ignores button
+#    625.16772 ped_at_button dir=0 num=73 arrives with 5 other peds queued up; ignores button
+#    630.61915 auto_exit exit=1 num=110 delay=10.81883
+#    630.61915 auto_exit exit=0 num=109 delay=10.81883
+#    639.03066 ped_at_button dir=0 num=75 arrives with 6 other peds queued up; ignores button
+#    639.03066 ped_at_button dir=1 num=76 arrives with 7 other peds queued up; ignores button
+#    644.57889 green_expires with safety signal in MIN_GREEN_LIGHT_NOREQUEST state
+#    652.89361 ped_at_button dir=1 num=78 arrives with 8 other peds queued up; ignores button
+#    652.89361 ped_at_button dir=0 num=77 arrives with 9 other peds queued up; ignores button
+#    666.75655 ped_at_button dir=0 num=79 arrives with 10 other peds queued up; ignores button
+#    666.75655 ped_at_button dir=1 num=80 arrives with 11 other peds queued up; ignores button
+#    669.57889 ped_impatient
+#    669.57889 yellow_begins auto dir=0 num=127 v_j=44.00000 ft/s e_j=665.42129 b_j=96.80000 t_j=4.40000 h_j=696.73493 g_b=695.57889 delay=3.24396
+#    669.57889 yellow_begins auto dir=1 num=128 v_j=44.00000 ft/s e_j=665.42129 b_j=96.80000 t_j=4.40000 h_j=696.73493 g_b=695.57889 delay=3.24396
+#    669.57889 yellow_begins auto dir=0 num=125 v_j=44.00000 ft/s e_j=655.02409 b_j=96.80000 t_j=4.40000 h_j=686.33772 g_b=695.57889 delay=13.64117
+#    669.57889 yellow_begins auto dir=1 num=126 v_j=44.00000 ft/s e_j=655.02409 b_j=96.80000 t_j=4.40000 h_j=686.33772 g_b=695.57889 delay=13.64117
+#    669.57889 ped_impatient
+#    671.30478 ped_impatient
+#    671.30478 ped_impatient
+#    677.57889 yellow_expires, safety_signal is now RED_LIGHT
+#    677.57889 yellow_expires ped dir=0 num=69 crosses street exits at 691.31023
+#    677.57889 yellow_expires ped dir=1 num=70 crosses street exits at 691.31023
+#    677.57889 yellow_expires ped dir=1 num=72 crosses street exits at 691.31023
+#    677.57889 yellow_expires ped dir=0 num=71 crosses street exits at 691.31023
+#    677.57889 yellow_expires ped dir=1 num=74 crosses street exits at 691.31023
+#    677.57889 yellow_expires ped dir=0 num=73 crosses street exits at 691.31023
+#    677.57889 yellow_expires ped dir=0 num=75 crosses street exits at 691.31023
+#    677.57889 yellow_expires ped dir=1 num=76 crosses street exits at 691.31023
+#    677.57889 yellow_expires ped dir=1 num=78 crosses street exits at 691.31023
+#    677.57889 yellow_expires ped dir=0 num=77 crosses street exits at 691.31023
+#    677.57889 yellow_expires ped dir=0 num=79 crosses street exits at 691.31023
+#    677.57889 yellow_expires ped dir=1 num=80 crosses street exits at 691.31023
+#    680.61949 ped_at_button dir=1 num=82 crosses on red will exit at 694.35084
+#    680.61949 ped_at_button dir=0 num=81 crosses on red will exit at 694.35084
+#    691.31023 ped_exit dir=0 num=79 delay=10.82234
+#    691.31023 ped_exit dir=1 num=80 delay=10.82234
+#    691.31023 ped_exit dir=0 num=75 delay=38.54823
+#    691.31023 ped_exit dir=1 num=78 delay=24.68528
+#    691.31023 ped_exit dir=1 num=76 delay=38.54823
+#    691.31023 ped_exit dir=1 num=72 delay=66.27411
+#    691.31023 ped_exit dir=1 num=74 delay=52.41117
+#    691.31023 ped_exit dir=0 num=71 delay=66.27411
+#    691.31023 ped_exit dir=0 num=69 delay=80.13706
+#    691.31023 ped_exit dir=1 num=70 delay=80.13706
+#    691.31023 ped_exit dir=0 num=77 delay=24.68528
+#    691.31023 ped_exit dir=0 num=73 delay=52.41117
+#    694.35084 ped_exit dir=0 num=81 delay=0.00000
+#    694.35084 ped_exit dir=1 num=82 delay=0.00000
+#    694.48244 ped_at_button dir=0 num=83 does not have time to cross (red ends at 695.57889 < would exit xwalk at 708.21378)
+#    694.48244 ped_at_button dir=1 num=84 does not have time to cross (red ends at 695.57889 < would exit xwalk at 708.21378)
+#    695.57889 red_expires, safety_signal is now MIN_GREEN_LIGHT_NOREQUEST
+#    695.57889 red_expires residual ped dir=1 num=84 speed=3.35000 ignores button
+#    695.57889 red_expires residual ped dir=0 num=83 speed=3.35000 ignores button
+#    708.34538 ped_at_button dir=0 num=85 arrives with 2 other peds queued up; ignores button
+#    708.34538 ped_at_button dir=1 num=86 arrives with 3 other peds queued up; ignores button
+#    713.79681 auto_exit exit=1 num=126 delay=13.64117
+#    713.79681 auto_exit exit=0 num=125 delay=13.64117
+#    722.20832 ped_at_button dir=0 num=87 arrives with 4 other peds queued up; ignores button
+#    722.20832 ped_at_button dir=1 num=88 arrives with 5 other peds queued up; ignores button
+#    724.19402 auto_exit exit=0 num=127 delay=3.24396
+#    724.19402 auto_exit exit=1 num=128 delay=3.24396
+#    730.57889 green_expires with safety signal in MIN_GREEN_LIGHT_NOREQUEST state
+#    736.07127 ped_at_button dir=1 num=90 arrives with 6 other peds queued up; ignores button
+#    736.07127 ped_at_button dir=0 num=89 arrives with 7 other peds queued up; ignores button
+#    749.93421 ped_at_button dir=0 num=91 arrives with 8 other peds queued up; ignores button
+#    749.93421 ped_at_button dir=1 num=92 arrives with 9 other peds queued up; ignores button
+#    755.57889 ped_impatient
+#    755.57889 yellow_begins auto dir=1 num=144 v_j=44.00000 ft/s e_j=748.59896 b_j=96.80000 t_j=4.40000 h_j=779.91259 g_b=781.57889 delay=6.06630
+#    755.57889 yellow_begins auto dir=0 num=143 v_j=44.00000 ft/s e_j=748.59896 b_j=96.80000 t_j=4.40000 h_j=779.91259 g_b=781.57889 delay=6.06630
+#    755.57889 yellow_begins auto dir=1 num=142 v_j=44.00000 ft/s e_j=738.20175 b_j=96.80000 t_j=4.40000 h_j=769.51538 g_b=781.57889 delay=16.46351
+#    755.57889 yellow_begins auto dir=0 num=141 v_j=44.00000 ft/s e_j=738.20175 b_j=96.80000 t_j=4.40000 h_j=769.51538 g_b=781.57889 delay=16.46351
+#    755.57889 ped_impatient
+#    763.57889 yellow_expires, safety_signal is now RED_LIGHT
+#    763.57889 yellow_expires ped dir=0 num=83 crosses street exits at 777.31023
+#    763.57889 yellow_expires ped dir=1 num=84 crosses street exits at 777.31023
+#    763.57889 yellow_expires ped dir=0 num=85 crosses street exits at 777.31023
+#    763.57889 yellow_expires ped dir=1 num=86 crosses street exits at 777.31023
+#    763.57889 yellow_expires ped dir=0 num=87 crosses street exits at 777.31023
+#    763.57889 yellow_expires ped dir=1 num=88 crosses street exits at 777.31023
+#    763.57889 yellow_expires ped dir=1 num=90 crosses street exits at 777.31023
+#    763.57889 yellow_expires ped dir=0 num=89 crosses street exits at 777.31023
+#    763.57889 yellow_expires ped dir=0 num=91 crosses street exits at 777.31023
+#    763.57889 yellow_expires ped dir=1 num=92 crosses street exits at 777.31023
+#    763.79716 ped_at_button dir=0 num=93 crosses on red will exit at 777.52850
+#    763.79716 ped_at_button dir=1 num=94 crosses on red will exit at 777.52850
+#    777.31023 ped_exit dir=1 num=84 delay=69.09645
+#    777.31023 ped_exit dir=0 num=87 delay=41.37056
+#    777.31023 ped_exit dir=0 num=91 delay=13.64468
+#    777.31023 ped_exit dir=1 num=92 delay=13.64468
+#    777.31023 ped_exit dir=1 num=88 delay=41.37056
+#    777.31023 ped_exit dir=1 num=90 delay=27.50762
+#    777.31023 ped_exit dir=0 num=85 delay=55.23351
+#    777.31023 ped_exit dir=0 num=83 delay=69.09645
+#    777.31023 ped_exit dir=0 num=89 delay=27.50762
+#    777.31023 ped_exit dir=1 num=86 delay=55.23351
+#    777.52850 ped_exit dir=1 num=94 delay=0.00000
+#    777.52850 ped_exit dir=0 num=93 delay=0.00000
+#    777.66010 ped_at_button dir=0 num=95 does not have time to cross (red ends at 781.57889 < would exit xwalk at 791.39144)
+#    777.66010 ped_at_button dir=1 num=96 does not have time to cross (red ends at 781.57889 < would exit xwalk at 791.39144)
+#    781.57889 red_expires, safety_signal is now MIN_GREEN_LIGHT_NOREQUEST
+#    781.57889 red_expires residual ped dir=1 num=96 speed=3.35000 ignores button
+#    781.57889 red_expires residual ped dir=0 num=95 speed=3.35000 ignores button
+#    791.52304 ped_at_button dir=0 num=97 arrives with 2 other peds queued up; ignores button
+#    791.52304 ped_at_button dir=1 num=98 arrives with 3 other peds queued up; ignores button
+#    796.97447 auto_exit exit=1 num=142 delay=16.46351
+#    796.97447 auto_exit exit=0 num=141 delay=16.46351
+#    805.38599 ped_at_button dir=1 num=100 arrives with 4 other peds queued up; ignores button
+#    805.38599 ped_at_button dir=0 num=99 arrives with 5 other peds queued up; ignores button
+#    807.37168 auto_exit exit=1 num=144 delay=6.06630
+#    807.37168 auto_exit exit=0 num=143 delay=6.06630
+#    816.57889 green_expires with safety signal in MIN_GREEN_LIGHT_NOREQUEST state
+#    819.24893 ped_at_button dir=1 num=102 arrives with 6 other peds queued up; ignores button
+#    819.24893 ped_at_button dir=0 num=101 arrives with 7 other peds queued up; ignores button
+#    833.11187 ped_at_button dir=0 num=103 arrives with 8 other peds queued up; pushes button
+#    833.11187 yellow_begins auto dir=1 num=158 v_j=44.00000 ft/s e_j=821.37941 b_j=96.80000 t_j=4.40000 h_j=852.69305 g_b=859.11187 delay=10.81883
+#    833.11187 yellow_begins auto dir=0 num=157 v_j=44.00000 ft/s e_j=821.37941 b_j=96.80000 t_j=4.40000 h_j=852.69305 g_b=859.11187 delay=10.81883
+#    833.11187 ped_at_button dir=1 num=104 arrives with 9 other peds queued up; ignores button
+#    841.11187 yellow_expires, safety_signal is now RED_LIGHT
+#    841.11187 yellow_expires ped dir=0 num=95 crosses street exits at 854.84322
+#    841.11187 yellow_expires ped dir=1 num=96 crosses street exits at 854.84322
+#    841.11187 yellow_expires ped dir=0 num=97 crosses street exits at 854.84322
+#    841.11187 yellow_expires ped dir=1 num=98 crosses street exits at 854.84322
+#    841.11187 yellow_expires ped dir=1 num=100 crosses street exits at 854.84322
+#    841.11187 yellow_expires ped dir=0 num=99 crosses street exits at 854.84322
+#    841.11187 yellow_expires ped dir=1 num=102 crosses street exits at 854.84322
+#    841.11187 yellow_expires ped dir=0 num=101 crosses street exits at 854.84322
+#    841.11187 yellow_expires ped dir=0 num=103 crosses street exits at 854.84322
+#    841.11187 yellow_expires ped dir=1 num=104 crosses street exits at 854.84322
+#    846.97482 ped_at_button dir=1 num=106 does not have time to cross (red ends at 859.11187 < would exit xwalk at 860.70616)
+#    846.97482 ped_at_button dir=0 num=105 does not have time to cross (red ends at 859.11187 < would exit xwalk at 860.70616)
+#    854.84322 ped_exit dir=0 num=101 delay=21.86294
+#    854.84322 ped_exit dir=1 num=98 delay=49.58883
+#    854.84322 ped_exit dir=0 num=103 delay=8.00000
+#    854.84322 ped_exit dir=1 num=102 delay=21.86294
+#    854.84322 ped_exit dir=1 num=100 delay=35.72589
+#    854.84322 ped_exit dir=0 num=97 delay=49.58883
+#    854.84322 ped_exit dir=0 num=95 delay=63.45177
+#    854.84322 ped_exit dir=1 num=104 delay=8.00000
+#    854.84322 ped_exit dir=1 num=96 delay=63.45177
+#    854.84322 ped_exit dir=0 num=99 delay=35.72589
+#    859.11187 red_expires, safety_signal is now MIN_GREEN_LIGHT_NOREQUEST
+#    859.11187 red_expires residual ped dir=0 num=105 speed=3.35000 ignores button
+#    859.11187 red_expires residual ped dir=1 num=106 speed=3.35000 ignores button
+#    860.83776 ped_at_button dir=1 num=108 arrives with 2 other peds queued up; ignores button
+#    860.83776 ped_at_button dir=0 num=107 arrives with 3 other peds queued up; ignores button
+#    874.70070 ped_at_button dir=1 num=110 arrives with 4 other peds queued up; ignores button
+#    874.70070 ped_at_button dir=0 num=109 arrives with 5 other peds queued up; ignores button
+#    880.15214 auto_exit exit=0 num=157 delay=10.81883
+#    880.15214 auto_exit exit=1 num=158 delay=10.81883
+#    888.56365 ped_at_button dir=1 num=112 arrives with 6 other peds queued up; ignores button
+#    888.56365 ped_at_button dir=0 num=111 arrives with 7 other peds queued up; ignores button
+#    894.11187 green_expires with safety signal in MIN_GREEN_LIGHT_NOREQUEST state
+#    902.42659 ped_at_button dir=1 num=114 arrives with 8 other peds queued up; ignores button
+#    902.42659 ped_at_button dir=0 num=113 arrives with 9 other peds queued up; ignores button
+#    916.28954 ped_at_button dir=1 num=116 arrives with 10 other peds queued up; ignores button
+#    916.28954 ped_at_button dir=0 num=115 arrives with 11 other peds queued up; ignores button
+#    919.11187 ped_impatient
+#    919.11187 yellow_begins auto dir=0 num=175 v_j=44.00000 ft/s e_j=914.95428 b_j=96.80000 t_j=4.40000 h_j=946.26791 g_b=945.11187 delay=3.24396
+#    919.11187 yellow_begins auto dir=1 num=176 v_j=44.00000 ft/s e_j=914.95428 b_j=96.80000 t_j=4.40000 h_j=946.26791 g_b=945.11187 delay=3.24396
+#    919.11187 yellow_begins auto dir=0 num=173 v_j=44.00000 ft/s e_j=904.55707 b_j=96.80000 t_j=4.40000 h_j=935.87071 g_b=945.11187 delay=13.64117
+#    919.11187 yellow_begins auto dir=1 num=174 v_j=44.00000 ft/s e_j=904.55707 b_j=96.80000 t_j=4.40000 h_j=935.87071 g_b=945.11187 delay=13.64117
+#    919.11187 ped_impatient
+#    920.83776 ped_impatient
+#    920.83776 ped_impatient
+#    927.11187 yellow_expires, safety_signal is now RED_LIGHT
+#    927.11187 yellow_expires ped dir=1 num=106 crosses street exits at 940.84322
+#    927.11187 yellow_expires ped dir=0 num=105 crosses street exits at 940.84322
+#    927.11187 yellow_expires ped dir=1 num=108 crosses street exits at 940.84322
+#    927.11187 yellow_expires ped dir=0 num=107 crosses street exits at 940.84322
+#    927.11187 yellow_expires ped dir=1 num=110 crosses street exits at 940.84322
+#    927.11187 yellow_expires ped dir=0 num=109 crosses street exits at 940.84322
+#    927.11187 yellow_expires ped dir=1 num=112 crosses street exits at 940.84322
+#    927.11187 yellow_expires ped dir=0 num=111 crosses street exits at 940.84322
+#    927.11187 yellow_expires ped dir=1 num=114 crosses street exits at 940.84322
+#    927.11187 yellow_expires ped dir=0 num=113 crosses street exits at 940.84322
+#    927.11187 yellow_expires ped dir=1 num=116 crosses street exits at 940.84322
+#    927.11187 yellow_expires ped dir=0 num=115 crosses street exits at 940.84322
+#    930.15248 ped_at_button dir=1 num=118 crosses on red will exit at 943.88382
+#    930.15248 ped_at_button dir=0 num=117 crosses on red will exit at 943.88382
+#    940.84322 ped_exit dir=1 num=112 delay=38.54823
+#    940.84322 ped_exit dir=1 num=116 delay=10.82234
+#    940.84322 ped_exit dir=0 num=115 delay=10.82234
+#    940.84322 ped_exit dir=0 num=111 delay=38.54823
+#    940.84322 ped_exit dir=1 num=114 delay=24.68528
+#    940.84322 ped_exit dir=1 num=108 delay=66.27411
+#    940.84322 ped_exit dir=1 num=110 delay=52.41117
+#    940.84322 ped_exit dir=0 num=107 delay=66.27411
+#    940.84322 ped_exit dir=1 num=106 delay=80.13706
+#    940.84322 ped_exit dir=0 num=105 delay=80.13706
+#    940.84322 ped_exit dir=0 num=109 delay=52.41117
+#    940.84322 ped_exit dir=0 num=113 delay=24.68528
+#    943.88382 ped_exit dir=0 num=117 delay=0.00000
+#    943.88382 ped_exit dir=1 num=118 delay=0.00000
+#    944.01542 ped_at_button dir=1 num=120 does not have time to cross (red ends at 945.11187 < would exit xwalk at 957.74677)
+#    944.01542 ped_at_button dir=0 num=119 does not have time to cross (red ends at 945.11187 < would exit xwalk at 957.74677)
+#    945.11187 red_expires, safety_signal is now MIN_GREEN_LIGHT_NOREQUEST
+#    945.11187 red_expires residual ped dir=0 num=119 speed=3.35000 ignores button
+#    945.11187 red_expires residual ped dir=1 num=120 speed=3.35000 ignores button
+#    957.87837 ped_at_button dir=1 num=122 arrives with 2 other peds queued up; ignores button
+#    957.87837 ped_at_button dir=0 num=121 arrives with 3 other peds queued up; ignores button
+#    963.32980 auto_exit exit=0 num=173 delay=13.64117
+#    963.32980 auto_exit exit=1 num=174 delay=13.64117
+#    971.74131 ped_at_button dir=1 num=124 arrives with 4 other peds queued up; ignores button
+#    971.74131 ped_at_button dir=0 num=123 arrives with 5 other peds queued up; ignores button
+#    973.72701 auto_exit exit=1 num=176 delay=3.24396
+#    973.72701 auto_exit exit=0 num=175 delay=3.24396
+#    980.11187 green_expires with safety signal in MIN_GREEN_LIGHT_NOREQUEST state
+#    985.60425 ped_at_button dir=0 num=125 arrives with 6 other peds queued up; ignores button
+#    985.60425 ped_at_button dir=1 num=126 arrives with 7 other peds queued up; ignores button
+#    999.46720 ped_at_button dir=0 num=127 arrives with 8 other peds queued up; ignores button
+#    999.46720 ped_at_button dir=1 num=128 arrives with 9 other peds queued up; ignores button
+#   1005.11187 ped_impatient
+#   1005.11187 yellow_begins auto dir=0 num=191 v_j=44.00000 ft/s e_j=998.13194 b_j=96.80000 t_j=4.40000 h_j=1029.44558 g_b=1031.11187 delay=6.06630
+#   1005.11187 yellow_begins auto dir=1 num=192 v_j=44.00000 ft/s e_j=998.13194 b_j=96.80000 t_j=4.40000 h_j=1029.44558 g_b=1031.11187 delay=6.06630
+#   1005.11187 yellow_begins auto dir=0 num=189 v_j=44.00000 ft/s e_j=987.73473 b_j=96.80000 t_j=4.40000 h_j=1019.04837 g_b=1031.11187 delay=16.46351
+#   1005.11187 yellow_begins auto dir=1 num=190 v_j=44.00000 ft/s e_j=987.73473 b_j=96.80000 t_j=4.40000 h_j=1019.04837 g_b=1031.11187 delay=16.46351
+#   1005.11187 ped_impatient
+#   1013.11187 yellow_expires, safety_signal is now RED_LIGHT
+#   1013.11187 yellow_expires ped dir=1 num=120 crosses street exits at 1026.84322
+#   1013.11187 yellow_expires ped dir=0 num=119 crosses street exits at 1026.84322
+#   1013.11187 yellow_expires ped dir=1 num=122 crosses street exits at 1026.84322
+#   1013.11187 yellow_expires ped dir=0 num=121 crosses street exits at 1026.84322
+#   1013.11187 yellow_expires ped dir=1 num=124 crosses street exits at 1026.84322
+#   1013.11187 yellow_expires ped dir=0 num=123 crosses street exits at 1026.84322
+#   1013.11187 yellow_expires ped dir=0 num=125 crosses street exits at 1026.84322
+#   1013.11187 yellow_expires ped dir=1 num=126 crosses street exits at 1026.84322
+#   1013.11187 yellow_expires ped dir=0 num=127 crosses street exits at 1026.84322
+#   1013.11187 yellow_expires ped dir=1 num=128 crosses street exits at 1026.84322
+#   1013.33014 ped_at_button dir=0 num=129 crosses on red will exit at 1027.06148
+#   1013.33014 ped_at_button dir=1 num=130 crosses on red will exit at 1027.06148
+#   1026.84322 ped_exit dir=0 num=121 delay=55.23351
+#   1026.84322 ped_exit dir=1 num=124 delay=41.37056
+#   1026.84322 ped_exit dir=0 num=127 delay=13.64468
+#   1026.84322 ped_exit dir=1 num=128 delay=13.64468
+#   1026.84322 ped_exit dir=0 num=123 delay=41.37056
+#   1026.84322 ped_exit dir=0 num=125 delay=27.50762
+#   1026.84322 ped_exit dir=1 num=122 delay=55.23351
+#   1026.84322 ped_exit dir=1 num=120 delay=69.09645
+#   1026.84322 ped_exit dir=1 num=126 delay=27.50762
+#   1026.84322 ped_exit dir=0 num=119 delay=69.09645
+#   1027.06148 ped_exit dir=1 num=130 delay=0.00000
+#   1027.06148 ped_exit dir=0 num=129 delay=0.00000
+#   1027.19308 ped_at_button dir=1 num=132 does not have time to cross (red ends at 1031.11187 < would exit xwalk at 1040.92443)
+#   1027.19308 ped_at_button dir=0 num=131 does not have time to cross (red ends at 1031.11187 < would exit xwalk at 1040.92443)
+#   1031.11187 red_expires, safety_signal is now MIN_GREEN_LIGHT_NOREQUEST
+#   1031.11187 red_expires residual ped dir=0 num=131 speed=3.35000 ignores button
+#   1031.11187 red_expires residual ped dir=1 num=132 speed=3.35000 ignores button
+#   1041.05603 ped_at_button dir=1 num=134 arrives with 2 other peds queued up; ignores button
+#   1041.05603 ped_at_button dir=0 num=133 arrives with 3 other peds queued up; ignores button
+#   1046.50746 auto_exit exit=0 num=189 delay=16.46351
+#   1046.50746 auto_exit exit=1 num=190 delay=16.46351
+#   1054.91897 ped_at_button dir=1 num=136 arrives with 4 other peds queued up; ignores button
+#   1054.91897 ped_at_button dir=0 num=135 arrives with 5 other peds queued up; ignores button
+#   1056.90467 auto_exit exit=1 num=192 delay=6.06630
+#   1056.90467 auto_exit exit=0 num=191 delay=6.06630
+#   1066.11187 green_expires with safety signal in MIN_GREEN_LIGHT_NOREQUEST state
+#   1068.78192 ped_at_button dir=1 num=138 arrives with 6 other peds queued up; ignores button
+#   1068.78192 ped_at_button dir=0 num=137 arrives with 7 other peds queued up; pushes button
+#   1076.78192 yellow_expires, safety_signal is now RED_LIGHT
+#   1076.78192 yellow_expires ped dir=1 num=132 crosses street exits at 1090.51326
+#   1076.78192 yellow_expires ped dir=0 num=131 crosses street exits at 1090.51326
+#   1076.78192 yellow_expires ped dir=1 num=134 crosses street exits at 1090.51326
+#   1076.78192 yellow_expires ped dir=0 num=133 crosses street exits at 1090.51326
+#   1076.78192 yellow_expires ped dir=1 num=136 crosses street exits at 1090.51326
+#   1076.78192 yellow_expires ped dir=0 num=135 crosses street exits at 1090.51326
+#   1076.78192 yellow_expires ped dir=1 num=138 crosses street exits at 1090.51326
+#   1076.78192 yellow_expires ped dir=0 num=137 crosses street exits at 1090.51326
+#   1082.64486 ped_at_button dir=0 num=139 does not have time to cross (red ends at 1094.78192 < would exit xwalk at 1096.37620)
+#   1082.64486 ped_at_button dir=1 num=140 does not have time to cross (red ends at 1094.78192 < would exit xwalk at 1096.37620)
+#   1090.51326 ped_exit dir=1 num=138 delay=8.00000
+#   1090.51326 ped_exit dir=0 num=137 delay=8.00000
+#   1090.51326 ped_exit dir=1 num=134 delay=35.72589
+#   1090.51326 ped_exit dir=1 num=136 delay=21.86294
+#   1090.51326 ped_exit dir=0 num=133 delay=35.72589
+#   1090.51326 ped_exit dir=1 num=132 delay=49.58883
+#   1090.51326 ped_exit dir=0 num=131 delay=49.58883
+#   1090.51326 ped_exit dir=0 num=135 delay=21.86294
+#   1094.78192 red_expires, safety_signal is now MIN_GREEN_LIGHT_NOREQUEST
+#   1094.78192 red_expires residual ped dir=1 num=140 speed=3.35000 ignores button
+#   1094.78192 red_expires residual ped dir=0 num=139 speed=3.35000 ignores button
+#   1096.50780 ped_at_button dir=1 num=142 arrives with 2 other peds queued up; ignores button
+#   1096.50780 ped_at_button dir=0 num=141 arrives with 3 other peds queued up; ignores button
+#   1110.37075 ped_at_button dir=0 num=143 arrives with 4 other peds queued up; ignores button
+#   1110.37075 ped_at_button dir=1 num=144 arrives with 5 other peds queued up; ignores button
+#   1124.23369 ped_at_button dir=1 num=146 arrives with 6 other peds queued up; ignores button
+#   1124.23369 ped_at_button dir=0 num=145 arrives with 7 other peds queued up; ignores button
+#   1129.78192 green_expires with safety signal in MIN_GREEN_LIGHT_NOREQUEST state
+#   1138.09663 ped_at_button dir=0 num=147 arrives with 8 other peds queued up; ignores button
+#   1138.09663 ped_at_button dir=1 num=148 arrives with 9 other peds queued up; ignores button
+#   1151.95958 ped_at_button dir=1 num=150 arrives with 10 other peds queued up; ignores button
+#   1151.95958 ped_at_button dir=0 num=149 arrives with 11 other peds queued up; ignores button
+#   1154.78192 ped_impatient
+#   1154.78192 ped_impatient
+#   1156.50780 ped_impatient
+#   1156.50780 ped_impatient
+#   1162.78192 yellow_expires, safety_signal is now RED_LIGHT
+#   1162.78192 yellow_expires ped dir=0 num=139 crosses street exits at 1176.51326
+#   1162.78192 yellow_expires ped dir=1 num=140 crosses street exits at 1176.51326
+#   1162.78192 yellow_expires ped dir=1 num=142 crosses street exits at 1176.51326
+#   1162.78192 yellow_expires ped dir=0 num=141 crosses street exits at 1176.51326
+#   1162.78192 yellow_expires ped dir=0 num=143 crosses street exits at 1176.51326
+#   1162.78192 yellow_expires ped dir=1 num=144 crosses street exits at 1176.51326
+#   1162.78192 yellow_expires ped dir=1 num=146 crosses street exits at 1176.51326
+#   1162.78192 yellow_expires ped dir=0 num=145 crosses street exits at 1176.51326
+#   1162.78192 yellow_expires ped dir=0 num=147 crosses street exits at 1176.51326
+#   1162.78192 yellow_expires ped dir=1 num=148 crosses street exits at 1176.51326
+#   1162.78192 yellow_expires ped dir=1 num=150 crosses street exits at 1176.51326
+#   1162.78192 yellow_expires ped dir=0 num=149 crosses street exits at 1176.51326
+#   1165.82252 ped_at_button dir=0 num=151 crosses on red will exit at 1179.55386
+#   1165.82252 ped_at_button dir=1 num=152 crosses on red will exit at 1179.55386
+#   1176.51326 ped_exit dir=0 num=141 delay=66.27411
+#   1176.51326 ped_exit dir=0 num=139 delay=80.13706
+#   1176.51326 ped_exit dir=1 num=142 delay=66.27411
+#   1176.51326 ped_exit dir=1 num=140 delay=80.13706
+#   1176.51326 ped_exit dir=0 num=149 delay=10.82234
+#   1176.51326 ped_exit dir=0 num=145 delay=38.54823
+#   1176.51326 ped_exit dir=0 num=147 delay=24.68528
+#   1176.51326 ped_exit dir=1 num=150 delay=10.82234
+#   1176.51326 ped_exit dir=1 num=148 delay=24.68528
+#   1176.51326 ped_exit dir=1 num=144 delay=52.41117
+#   1176.51326 ped_exit dir=1 num=146 delay=38.54823
+#   1176.51326 ped_exit dir=0 num=143 delay=52.41117
+#   1179.55386 ped_exit dir=1 num=152 delay=0.00000
+#   1179.55386 ped_exit dir=0 num=151 delay=0.00000
+#   1179.68546 ped_at_button dir=0 num=153 does not have time to cross (red ends at 1180.78192 < would exit xwalk at 1193.41681)
+#   1179.68546 ped_at_button dir=1 num=154 does not have time to cross (red ends at 1180.78192 < would exit xwalk at 1193.41681)
+#   1180.78192 red_expires, safety_signal is now MIN_GREEN_LIGHT_NOREQUEST
+#   1180.78192 red_expires residual ped dir=1 num=154 speed=3.35000 ignores button
+#   1180.78192 red_expires residual ped dir=0 num=153 speed=3.35000 ignores button
+#   1193.54841 ped_at_button dir=0 num=155 arrives with 2 other peds queued up; ignores button
+#   1193.54841 ped_at_button dir=1 num=156 arrives with 3 other peds queued up; ignores button
+#   1207.41135 ped_at_button dir=0 num=157 arrives with 4 other peds queued up; ignores button
+#   1207.41135 ped_at_button dir=1 num=158 arrives with 5 other peds queued up; ignores button
+#   1215.78192 green_expires with safety signal in MIN_GREEN_LIGHT_NOREQUEST state
+#   1221.27429 ped_at_button dir=1 num=160 arrives with 6 other peds queued up; ignores button
+#   1221.27429 ped_at_button dir=0 num=159 arrives with 7 other peds queued up; ignores button
+#   1235.13724 ped_at_button dir=1 num=162 arrives with 8 other peds queued up; ignores button
+#   1235.13724 ped_at_button dir=0 num=161 arrives with 9 other peds queued up; ignores button
+#   1240.78192 ped_impatient
+#   1240.78192 ped_impatient
+#   1248.78192 yellow_expires, safety_signal is now RED_LIGHT
+#   1248.78192 yellow_expires ped dir=0 num=153 crosses street exits at 1262.51326
+#   1248.78192 yellow_expires ped dir=1 num=154 crosses street exits at 1262.51326
+#   1248.78192 yellow_expires ped dir=0 num=155 crosses street exits at 1262.51326
+#   1248.78192 yellow_expires ped dir=1 num=156 crosses street exits at 1262.51326
+#   1248.78192 yellow_expires ped dir=0 num=157 crosses street exits at 1262.51326
+#   1248.78192 yellow_expires ped dir=1 num=158 crosses street exits at 1262.51326
+#   1248.78192 yellow_expires ped dir=1 num=160 crosses street exits at 1262.51326
+#   1248.78192 yellow_expires ped dir=0 num=159 crosses street exits at 1262.51326
+#   1248.78192 yellow_expires ped dir=1 num=162 crosses street exits at 1262.51326
+#   1248.78192 yellow_expires ped dir=0 num=161 crosses street exits at 1262.51326
+#   1249.00018 ped_at_button dir=1 num=164 crosses on red will exit at 1262.73153
+#   1249.00018 ped_at_button dir=0 num=163 crosses on red will exit at 1262.73153
+#   1262.51326 ped_exit dir=0 num=153 delay=69.09645
+#   1262.51326 ped_exit dir=0 num=161 delay=13.64468
+#   1262.51326 ped_exit dir=1 num=158 delay=41.37056
+#   1262.51326 ped_exit dir=1 num=154 delay=69.09645
+#   1262.51326 ped_exit dir=0 num=155 delay=55.23351
+#   1262.51326 ped_exit dir=1 num=160 delay=27.50762
+#   1262.51326 ped_exit dir=1 num=162 delay=13.64468
+#   1262.51326 ped_exit dir=0 num=159 delay=27.50762
+#   1262.51326 ped_exit dir=1 num=156 delay=55.23351
+#   1262.51326 ped_exit dir=0 num=157 delay=41.37056
+#   1262.73153 ped_exit dir=1 num=164 delay=0.00000
+#   1262.73153 ped_exit dir=0 num=163 delay=0.00000
+#   1262.86313 ped_at_button dir=1 num=166 does not have time to cross (red ends at 1266.78192 < would exit xwalk at 1276.59447)
+#   1262.86313 ped_at_button dir=0 num=165 does not have time to cross (red ends at 1266.78192 < would exit xwalk at 1276.59447)
+#   1266.78192 red_expires, safety_signal is now MIN_GREEN_LIGHT_NOREQUEST
+#   1266.78192 red_expires residual ped dir=0 num=165 speed=3.35000 ignores button
+#   1266.78192 red_expires residual ped dir=1 num=166 speed=3.35000 ignores button
+#   1276.72607 ped_at_button dir=0 num=167 arrives with 2 other peds queued up; ignores button
+#   1276.72607 ped_at_button dir=1 num=168 arrives with 3 other peds queued up; ignores button
+#   1290.58901 ped_at_button dir=1 num=170 arrives with 4 other peds queued up; ignores button
+#   1290.58901 ped_at_button dir=0 num=169 arrives with 5 other peds queued up; ignores button
+#   1301.78192 green_expires with safety signal in MIN_GREEN_LIGHT_NOREQUEST state
+#   1304.45196 ped_at_button dir=0 num=171 arrives with 6 other peds queued up; ignores button
+#   1304.45196 ped_at_button dir=1 num=172 arrives with 7 other peds queued up; ignores button
+#   1318.31490 ped_at_button dir=0 num=173 arrives with 8 other peds queued up; pushes button
+#   1318.31490 ped_at_button dir=1 num=174 arrives with 9 other peds queued up; ignores button
+#   1326.31490 yellow_expires, safety_signal is now RED_LIGHT
+#   1326.31490 yellow_expires ped dir=1 num=166 crosses street exits at 1340.04624
+#   1326.31490 yellow_expires ped dir=0 num=165 crosses street exits at 1340.04624
+#   1326.31490 yellow_expires ped dir=0 num=167 crosses street exits at 1340.04624
+#   1326.31490 yellow_expires ped dir=1 num=168 crosses street exits at 1340.04624
+#   1326.31490 yellow_expires ped dir=1 num=170 crosses street exits at 1340.04624
+#   1326.31490 yellow_expires ped dir=0 num=169 crosses street exits at 1340.04624
+#   1326.31490 yellow_expires ped dir=0 num=171 crosses street exits at 1340.04624
+#   1326.31490 yellow_expires ped dir=1 num=172 crosses street exits at 1340.04624
+#   1326.31490 yellow_expires ped dir=0 num=173 crosses street exits at 1340.04624
+#   1326.31490 yellow_expires ped dir=1 num=174 crosses street exits at 1340.04624
+#   1332.17784 ped_at_button dir=0 num=175 does not have time to cross (red ends at 1344.31490 < would exit xwalk at 1345.90919)
+#   1332.17784 ped_at_button dir=1 num=176 does not have time to cross (red ends at 1344.31490 < would exit xwalk at 1345.90919)
+#   1340.04624 ped_exit dir=1 num=166 delay=63.45177
+#   1340.04624 ped_exit dir=0 num=165 delay=63.45177
+#   1340.04624 ped_exit dir=1 num=174 delay=8.00000
+#   1340.04624 ped_exit dir=0 num=169 delay=35.72589
+#   1340.04624 ped_exit dir=0 num=167 delay=49.58883
+#   1340.04624 ped_exit dir=0 num=171 delay=21.86294
+#   1340.04624 ped_exit dir=0 num=173 delay=8.00000
+#   1340.04624 ped_exit dir=1 num=172 delay=21.86294
+#   1340.04624 ped_exit dir=1 num=168 delay=49.58883
+#   1340.04624 ped_exit dir=1 num=170 delay=35.72589
+#   1344.31490 red_expires, safety_signal is now MIN_GREEN_LIGHT_NOREQUEST
+#   1344.31490 red_expires residual ped dir=1 num=176 speed=3.35000 ignores button
+#   1344.31490 red_expires residual ped dir=0 num=175 speed=3.35000 ignores button
+#   1346.04079 ped_at_button dir=1 num=178 arrives with 2 other peds queued up; ignores button
+#   1346.04079 ped_at_button dir=0 num=177 arrives with 3 other peds queued up; ignores button
+#   1359.90373 ped_at_button dir=1 num=180 arrives with 4 other peds queued up; ignores button
+#   1359.90373 ped_at_button dir=0 num=179 arrives with 5 other peds queued up; ignores button
+#   1373.76667 ped_at_button dir=0 num=181 arrives with 6 other peds queued up; ignores button
+#   1373.76667 ped_at_button dir=1 num=182 arrives with 7 other peds queued up; ignores button
+#   1379.31490 green_expires with safety signal in MIN_GREEN_LIGHT_NOREQUEST state
+#   1387.62962 ped_at_button dir=0 num=183 arrives with 8 other peds queued up; ignores button
+#   1387.62962 ped_at_button dir=1 num=184 arrives with 9 other peds queued up; ignores button
+#   1401.49256 ped_at_button dir=0 num=185 arrives with 10 other peds queued up; ignores button
+#   1401.49256 ped_at_button dir=1 num=186 arrives with 11 other peds queued up; ignores button
+#   1404.31490 ped_impatient
+#   1404.31490 ped_impatient
+#   1406.04079 ped_impatient
+#   1406.04079 ped_impatient
+#   1412.31490 yellow_expires, safety_signal is now RED_LIGHT
+#   1412.31490 yellow_expires ped dir=0 num=175 crosses street exits at 1426.04624
+#   1412.31490 yellow_expires ped dir=1 num=176 crosses street exits at 1426.04624
+#   1412.31490 yellow_expires ped dir=1 num=178 crosses street exits at 1426.04624
+#   1412.31490 yellow_expires ped dir=0 num=177 crosses street exits at 1426.04624
+#   1412.31490 yellow_expires ped dir=1 num=180 crosses street exits at 1426.04624
+#   1412.31490 yellow_expires ped dir=0 num=179 crosses street exits at 1426.04624
+#   1412.31490 yellow_expires ped dir=0 num=181 crosses street exits at 1426.04624
+#   1412.31490 yellow_expires ped dir=1 num=182 crosses street exits at 1426.04624
+#   1412.31490 yellow_expires ped dir=0 num=183 crosses street exits at 1426.04624
+#   1412.31490 yellow_expires ped dir=1 num=184 crosses street exits at 1426.04624
+#   1412.31490 yellow_expires ped dir=0 num=185 crosses street exits at 1426.04624
+#   1412.31490 yellow_expires ped dir=1 num=186 crosses street exits at 1426.04624
+#   1415.35551 ped_at_button dir=0 num=187 crosses on red will exit at 1429.08685
+#   1415.35551 ped_at_button dir=1 num=188 crosses on red will exit at 1429.08685
+#   1426.04624 ped_exit dir=1 num=180 delay=52.41117
+#   1426.04624 ped_exit dir=0 num=181 delay=38.54823
+#   1426.04624 ped_exit dir=0 num=179 delay=52.41117
+#   1426.04624 ped_exit dir=0 num=175 delay=80.13706
+#   1426.04624 ped_exit dir=1 num=178 delay=66.27411
+#   1426.04624 ped_exit dir=1 num=176 delay=80.13706
+#   1426.04624 ped_exit dir=0 num=177 delay=66.27411
+#   1426.04624 ped_exit dir=1 num=182 delay=38.54823
+#   1426.04624 ped_exit dir=0 num=183 delay=24.68528
+#   1426.04624 ped_exit dir=1 num=184 delay=24.68528
+#   1426.04624 ped_exit dir=0 num=185 delay=10.82234
+#   1426.04624 ped_exit dir=1 num=186 delay=10.82234
+#   1429.08685 ped_exit dir=1 num=188 delay=0.00000
+#   1429.08685 ped_exit dir=0 num=187 delay=0.00000
+#   1429.21845 ped_at_button dir=1 num=190 does not have time to cross (red ends at 1430.31490 < would exit xwalk at 1442.94979)
+#   1429.21845 ped_at_button dir=0 num=189 does not have time to cross (red ends at 1430.31490 < would exit xwalk at 1442.94979)
+#   1430.31490 red_expires, safety_signal is now MIN_GREEN_LIGHT_NOREQUEST
+#   1430.31490 red_expires residual ped dir=0 num=189 speed=3.35000 ignores button
+#   1430.31490 red_expires residual ped dir=1 num=190 speed=3.35000 ignores button
+#   1443.08139 ped_at_button dir=1 num=192 arrives with 2 other peds queued up; ignores button
+#   1443.08139 ped_at_button dir=0 num=191 arrives with 3 other peds queued up; ignores button
+#   1456.94434 ped_at_button dir=0 num=193 arrives with 4 other peds queued up; ignores button
+#   1456.94434 ped_at_button dir=1 num=194 arrives with 5 other peds queued up; ignores button
+#   1465.31490 green_expires with safety signal in MIN_GREEN_LIGHT_NOREQUEST state
+#   1470.80728 ped_at_button dir=0 num=195 arrives with 6 other peds queued up; ignores button
+#   1470.80728 ped_at_button dir=1 num=196 arrives with 7 other peds queued up; ignores button
+#   1484.67022 ped_at_button dir=0 num=197 arrives with 8 other peds queued up; ignores button
+#   1484.67022 ped_at_button dir=1 num=198 arrives with 9 other peds queued up; ignores button
+#   1490.31490 ped_impatient
+#   1490.31490 ped_impatient
+#   1498.31490 yellow_expires, safety_signal is now RED_LIGHT
+#   1498.31490 yellow_expires ped dir=1 num=190 crosses street exits at 1512.04624
+#   1498.31490 yellow_expires ped dir=0 num=189 crosses street exits at 1512.04624
+#   1498.31490 yellow_expires ped dir=1 num=192 crosses street exits at 1512.04624
+#   1498.31490 yellow_expires ped dir=0 num=191 crosses street exits at 1512.04624
+#   1498.31490 yellow_expires ped dir=0 num=193 crosses street exits at 1512.04624
+#   1498.31490 yellow_expires ped dir=1 num=194 crosses street exits at 1512.04624
+#   1498.31490 yellow_expires ped dir=0 num=195 crosses street exits at 1512.04624
+#   1498.31490 yellow_expires ped dir=1 num=196 crosses street exits at 1512.04624
+#   1498.31490 yellow_expires ped dir=0 num=197 crosses street exits at 1512.04624
+#   1498.31490 yellow_expires ped dir=1 num=198 crosses street exits at 1512.04624
+#   1498.53317 ped_at_button dir=0 num=199 crosses on red will exit at 1512.26451
+#   1498.53317 ped_at_button dir=1 num=200 crosses on red will exit at 1512.26451
+#   1512.04624 ped_exit dir=1 num=190 delay=69.09645
+#   1512.04624 ped_exit dir=1 num=192 delay=55.23351
+#   1512.04624 ped_exit dir=0 num=189 delay=69.09645
+#   1512.04624 ped_exit dir=1 num=196 delay=27.50762
+#   1512.04624 ped_exit dir=0 num=197 delay=13.64468
+#   1512.04624 ped_exit dir=0 num=195 delay=27.50762
+#   1512.04624 ped_exit dir=0 num=193 delay=41.37056
+#   1512.04624 ped_exit dir=1 num=194 delay=41.37056
+#   1512.04624 ped_exit dir=0 num=191 delay=55.23351
+#   1512.04624 ped_exit dir=1 num=198 delay=13.64468
+#   1512.26451 ped_exit dir=0 num=199 delay=0.00000
+#   1512.26451 ped_exit dir=1 num=200 delay=0.00000
+#   1516.31490 red_expires, safety_signal is now MIN_GREEN_LIGHT_NOREQUEST
+#   1551.31490 green_expires with safety signal in MIN_GREEN_LIGHT_NOREQUEST state
+# OUTPUT mean-auto-wait                   2.104436
+# OUTPUT var-auto-wait                    23.975669
+# OUTPUT mean-ped-wait                    35.832591
+## end of simulation for 200 arrivals, hth ##
+test -x "./SIM" || { echo >&2 "error: an executable ./SIM is missing in the current directory." ; exit 1 ; }
+./SIM 200 <(yes 0.5) <(yes 0.5) <(while true ; do for((i=0;i<30;i++)); do echo 0.95 ; done ; echo 0.1 ; done)
+
