@@ -317,6 +317,7 @@ void process_person_arrive(Person* arrPerson) {
         // DEBUG
         //cout << "personQueue is size: " << personQueue.size() << endl;
         if (should_press(personQueue.size())) {
+            firstArrival = false;
             // DEBUG
             //cout << "Button was pressed!" << endl;
             // set pressed button to true
