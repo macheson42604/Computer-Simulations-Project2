@@ -65,6 +65,7 @@ priority_queue<Event, vector<Event>, greater<Event>> eventList;
 
 int numWalked = 0; // initialize to 0 - no one has walked yet
 double redEndTime = -1; //cannot use until processing first Red event
+bool firstArrival = true;
 
 // Simulation End Indicators
 int numPeople = 0;
@@ -213,6 +214,8 @@ void process_new_green() {
     // P-6B: add CheckMin event corresponding to the first person left behind if this person exists (aka if PersonQueue is not empty)
     if (!personQueue.empty()) {
         eventList.push(Event(simClock + 60, CheckMinEvent, personQueue[0]));
+        // DEBUG
+        //cout << "CheckMin event declared" << endl;
 
         // P-6C: loop through all the people in the queue and check if they will push the button with probability P(n=0)
         for (size_t i = 0; i < personQueue.size(); i++) {
@@ -302,6 +305,8 @@ void process_person_enter(Person* currPerson) {
 PROCESS PERSON ARRIVAL EVENT
 */
 void process_person_arrive(Person* arrPerson) {
+    // DEBUG
+    //cout << "Person " << arrPerson->get_id() << " has arrived at " << arrPerson->get_arr_time() << "; ";
     // add the person to the list of pedestrians waiting at crosswalk
     personQueue.push_back(arrPerson);
 
@@ -309,7 +314,11 @@ void process_person_arrive(Person* arrPerson) {
     // P-6A: press the button only if signal is a NO WALK state (aka as long as the light is not Red)
     if (currLight != LightType::Red) { 
         // determine if the person is going to push the button
+        // DEBUG
+        //cout << "personQueue is size: " << personQueue.size() << endl;
         if (should_press(personQueue.size())) {
+            // DEBUG
+            //cout << "Button was pressed!" << endl;
             // set pressed button to true
             isPressed = true;
 
@@ -317,6 +326,9 @@ void process_person_arrive(Person* arrPerson) {
             if (currLight == LightType::ExpGreen) {
                 eventList.push(Event(simClock + Cross::MIN_DOUBLE, YellowEvent));
             }
+        } else if (firstArrival) {
+            firstArrival = false;
+            eventList.push(Event(simClock + 60, CheckMinEvent, personQueue[0]));
         }
     }
 
@@ -454,7 +466,7 @@ void check_carQueue() {
     int carInd = 0;
     while (carInd < (int)carQueue.size() && !carQueue.empty() ) { 
         if (currLight == LightType::NewGreen) {
-            if (carQueue[carInd].get_stopped() || (!check_must_stop(carQueue[carInd], Cross::DRIVE_CROSS_FRONT) && !carQueue[carInd].get_left())) { // Cars that arrived during the previous green or yellow lights and were told to stop or if they arrived during red and needed to stop
+            if (!check_must_stop(carQueue[carInd], Cross::DRIVE_CROSS_FRONT) && !carQueue[carInd].get_left()) { // Cars that arrived during the previous green or yellow lights and were told to stop or if they arrived during red and needed to stop
                 carQueue[carInd].set_stopped();
                 calc_actual_time(carQueue[carInd]);
             } else {
@@ -491,9 +503,6 @@ void check_carQueue() {
                 //carQueue[carInd].set_stopped();
                 carQueue[carInd].set_left();
                 carQueue[carInd].set_actual_time(carQueue[carInd].get_optimal_time());
-            } else {
-                //carQueue[carInd].set_left();
-                //carQueue[carInd].set_actual_time(carQueue[carInd].get_optimal_time());
             }
 
             carInd ++;

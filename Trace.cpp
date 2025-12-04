@@ -34,5 +34,10 @@ double get_traceValue(ifstream& traceFileStream) {
         cerr << "Error: not enough values in trace file" << endl;
         exit(1);
     }
+
+    //DEBUG
+    //if (traceValue == 0.1) {
+    //    cout << "Value Found" << endl;
+    //}
     return traceValue;
  }
