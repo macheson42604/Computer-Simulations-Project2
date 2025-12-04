@@ -405,8 +405,8 @@ void walk(double remainTime) {
             update_person_stats(personQueue[currInd]);
 
             // DEBUG
-            cout << "simClock: " << simClock << " | curr Light: " << get_light() <<
-            "| ped id: " << personQueue[currInd]->get_id() << "| ped enter: " << personQueue[currInd]->get_enter_time() << " | ped delay: " << personQueue[currInd]->calc_delay() << endl;
+            //cout << "simClock: " << simClock << " | curr Light: " << get_light() <<
+            //"| ped id: " << personQueue[currInd]->get_id() << "| ped enter: " << personQueue[currInd]->get_enter_time() << " | ped delay: " << personQueue[currInd]->calc_delay() << endl;
             
 
 
@@ -447,7 +447,6 @@ void process_car_enter(Car* currCar) {
 }
 
 // called only during processing start of red event and new green event
-// TODO: silly me forgor to iterate the carInd
 void check_carQueue() {
     // DEBUG
     //cout << "carQueue size: " << (int)carQueue.size() << endl;
@@ -471,20 +470,30 @@ void check_carQueue() {
 
 
             // DEBUG
-            cout << "simClock: " << simClock << " | curr Light: " << get_light() << 
-            "| car id: " << carQueue[carInd].get_id() << " | car enter time: " << carQueue[carInd].get_enter_time() << " | car delay: " << carQueue[carInd].calc_delay() << endl;
+            if (carQueue[carInd].get_id() == 23) {
+            //cout << "simClock: " << simClock << " | curr Light: " << get_light() << 
+            //"| car id: " << carQueue[carInd].get_id() << " | car enter time: " << carQueue[carInd].get_enter_time() << " | car exit time: " << carQueue[carInd].get_actual_time() << " | car delay: " << carQueue[carInd].calc_delay() << endl;
+                cout << "simClock: " << simClock << endl;
+                cout << "curr Light: " << get_light() << endl;
+                cout << "car id: " << carQueue[carInd].get_id() << endl;
+                cout << "car enter time: " << carQueue[carInd].get_enter_time() << endl;
+                cout << "car exit time: " << carQueue[carInd].get_actual_time() << endl;
+                cout << "car delay: " << carQueue[carInd].calc_delay() << endl;
+            }
             
 
             carQueue.erase(carQueue.begin() + carInd); // pop off, yaaaAAs queen, you go gurl
 
         } else if (currLight == LightType::Red) {            
-            if (check_must_stop(carQueue[carInd], Cross::DRIVE_CROSS_END)) {
+            if (!check_must_stop(carQueue[carInd], Cross::DRIVE_CROSS_END)) {
                 // DEBUG
                 // cout << "Car: " << carQueue[carInd].get_id() << " stopped | ";
-                carQueue[carInd].set_stopped();
-            } else {
+                //carQueue[carInd].set_stopped();
                 carQueue[carInd].set_left();
                 carQueue[carInd].set_actual_time(carQueue[carInd].get_optimal_time());
+            } else {
+                //carQueue[carInd].set_left();
+                //carQueue[carInd].set_actual_time(carQueue[carInd].get_optimal_time());
             }
 
             carInd ++;
@@ -507,10 +516,16 @@ void check_carQueue() {
 // before distance = Cross::DRIVE_CROSS_FRONT - braking distance
 // after distance = Cross::DRIVE_CROSS_FRONT + braking distance = AKA Cross::DRIVE_CROSS_END - braking distance
 void calc_actual_time(Car& car) {
+
+    if (car.get_id() == 23) {
+        cout << "Speed: " << car.get_speed() << endl;
+        cout << "FRONT: " << Cross::DRIVE_CROSS_FRONT << endl;
+        cout << "END: " << Cross::DRIVE_CROSS_END << endl;
+    }
     // Find distances
     double changingSpeedDist = (car.get_speed() * car.get_speed()) / (2.0 * Cross::ACC); // the distance the car travels while accelerating or deccelerating
     double constBeforeDist = Cross::DRIVE_CROSS_FRONT - changingSpeedDist; // the distance the car travels while going a constant speed
-    double constAfterDist = Cross::DRIVE_CROSS_END - changingSpeedDist;
+    double constAfterDist = Cross::TOTAL_DRIVE_DIST - Cross::DRIVE_CROSS_FRONT - changingSpeedDist;
 
     // Convert distances to time durations
     double changingSpeedTime = car.get_speed() / Cross::ACC;
@@ -527,6 +542,10 @@ void calc_actual_time(Car& car) {
     // Set the new actual time = time elapse + car enter time
     double actualTime = (changingSpeedTime * 2.0) + constBeforeTime + constAfterTime + stoppedTime + car.get_enter_time();
     car.set_actual_time(actualTime);
+
+    /*if (car.get_enter_time() + constBeforeTime + changingSpeedTime + stoppedTime != simClock) {
+        cerr << "Error: drive times don't add up bud! It was: " << car.get_enter_time() + constBeforeTime + changingSpeedTime + stoppedTime << "; and should have been: " << simClock << endl;
+    }*/
 }
 
 bool check_must_stop(Car& car, double dist) {
