@@ -69,7 +69,9 @@ bool firstArrival = true;
 
 // Simulation End Indicators
 int numPeople = 0;
+int numPeopleExit = 0;
 int numCars = 0;
+int numCarsExit = 0;
 int Q = -1;
 
 // Statistics Variables (these will be outputted at the end)
@@ -152,13 +154,14 @@ int main (int argc, char* argv[]) {
         cerr << "Error: eventList is empty" << endl;
         exit(1);
     }
-    // get first event
-    Event curEvent = eventList.top();
     
 
     // Main code loop
     while (!eventList.empty()) {
+        // get next event
+        Event curEvent = eventList.top();
         eventList.pop();
+
         // set simulation clock time to that of the event
         simClock = curEvent.get_process_time();
 
@@ -182,10 +185,9 @@ int main (int argc, char* argv[]) {
             process_red();
         } else if (curEvent.get_type() == CheckMinEvent) {
             process_check_min(curEvent.get_assoc_person());
-        }
-
-        // get next event
-        curEvent = eventList.top();
+        } else {
+            cerr << "Error: Event is unidentified" << endl;
+        } 
     }
 
     output_stats();
@@ -229,7 +231,7 @@ void process_new_green() {
     check_carQueue();
 
     // DEBUG
-    cout << "NewGreen at " << simClock << endl;
+    //cout << "NewGreen at " << simClock << endl;
 }
 
 /* 
@@ -245,7 +247,7 @@ void process_exp_green() {
     }
 
     //DEBUG
-    cout << "ExpGreen at " << simClock << endl;
+    //cout << "ExpGreen at " << simClock << endl;
 }
 
 /* 
@@ -259,7 +261,7 @@ void process_yellow() {
     eventList.push(Event(simClock + Cross::YELLOW, RedEvent));
 
     // DEBUG 
-    cout << "Yellow light at " << simClock << endl;
+    //cout << "Yellow light at " << simClock << endl;
 }
 
 /* 
@@ -282,7 +284,7 @@ void process_red() {
     check_carQueue();
 
     // DEBUG
-    cout << "Red light at " << simClock << endl;
+    //cout << "Red light at " << simClock << endl;
 }
 
 
@@ -316,7 +318,7 @@ PROCESS PERSON ARRIVAL EVENT
 */
 void process_person_arrive(Person* arrPerson) {
     // DEBUG
-    cout << "Person " << arrPerson->get_id() << " has arrived at " << simClock << endl;
+    //cout << "Person " << arrPerson->get_id() << " has arrived at " << simClock << endl;
     // add the person to the list of pedestrians waiting at crosswalk
     personQueue.push_back(arrPerson);
 
@@ -325,11 +327,11 @@ void process_person_arrive(Person* arrPerson) {
     if (currLight != LightType::Red) { 
         // determine if the person is going to push the button
         // DEBUG
-        cout << "personQueue is size: " << personQueue.size() << endl;
+        //cout << "personQueue is size: " << personQueue.size() << endl;
         if (should_press(personQueue.size()-1)) {
             firstArrival = false;
             // DEBUG
-            cout << "Button was pressed!" << endl;
+            //cout << "Button was pressed!" << endl;
             // set pressed button to true
             isPressed = true;
 
@@ -420,13 +422,14 @@ void walk(double remainTime) {
     // we need to have a counter because if there is a person that arrives to the light later in the red light and can make it they should be able to pass
     // iterate through the list of people and see if their walking time will be able to reach 
     // DEBUG 
-    cout << "numWalked is " << numWalked << " on a " << get_light() << endl;
+    //cout << "numWalked is " << numWalked << " on a " << get_light() << endl;
     while (!personQueue.empty() && numWalked < Cross::MAX_WALK_NUM && currInd < (int)personQueue.size()) {
         if (personQueue[currInd]->calc_cross_time() < remainTime) {
             // update their actual time in order to calculate delays for stats
             personQueue[currInd]->update_actual_time(simClock);
 
             // all people leaving get these updated
+            numPeopleExit ++;
             update_person_stats(personQueue[currInd]);
 
             // DEBUG
@@ -436,6 +439,7 @@ void walk(double remainTime) {
 
 
             // remove the person from the queue
+           
             personQueue.erase(personQueue.begin() + currInd);
             // increase counter of people that have crossed
             numWalked++;
@@ -491,13 +495,14 @@ void check_carQueue() {
             }
 
             // all cars leaving get these updated
+            numCarsExit ++;
             update_car_stats(carQueue[carInd]);
 
 
             // DEBUG
             //if (carQueue[carInd].get_id() == 23) {
-            cout << "simClock: " << simClock << 
-            "| car id: " << carQueue[carInd].get_id() << " | car enter time: " << carQueue[carInd].get_enter_time() << " | car exit time: " << carQueue[carInd].get_actual_time() << " | car delay: " << carQueue[carInd].calc_delay() << endl;
+            //cout << "simClock: " << simClock << 
+            //"| car id: " << carQueue[carInd].get_id() << " | car enter time: " << carQueue[carInd].get_enter_time() << " | car exit time: " << carQueue[carInd].get_actual_time() << " | car delay: " << carQueue[carInd].calc_delay() << endl;
             //    cout << "simClock: " << simClock << endl;
             //    cout << "curr Light: " << get_light() << endl;
             //    cout << "car id: " << carQueue[carInd].get_id() << endl;
@@ -588,7 +593,7 @@ void update_car_stats(Car& car) {
     // update v using Welfords
     // NOTE: call this BEFORE updating mean (so you're actually using bar{x_i-1} instead of bar{x_i})
     // v_i = v_i-1 + (i-1)/i * (x_i - bar_x_i-1)^2
-    v_A = v_A + ( ((double)(car.get_id() - 1.0)/(double)car.get_id()) * (car.calc_delay() - mean_DA) * (car.calc_delay() - mean_DA) );
+    v_A = v_A + ( ((double)(car.get_id() - 1.0)/(double)numCarsExit) * (car.calc_delay() - mean_DA) * (car.calc_delay() - mean_DA) );
 
     // update mean using Welfords (little redundant having in both update_car_stats and update_person_stats but better than calling 1 line func with 3 params)
     // bar_x_i = bar_x_i-1 + (1/i) * (x_i - bar_x_i-1)
@@ -603,17 +608,26 @@ void update_car_stats(Car& car) {
 void update_person_stats(Person* person) {
     // update mean using Welfords
     // bar_x_i = bar_x_i-1 + (1/i) * (x_i - bar_x_i-1)
-    mean_DP = mean_DP + ((1.0 / (double)person->get_id()) * (person->calc_delay() - mean_DP));
+    mean_DP = mean_DP + ((1.0 / (double)numPeopleExit) * (person->calc_delay() - mean_DP));
 
     // DEBUG
     // cout << "person delay: " << person->calc_delay() << endl;
     // cout << "person mean: " << mean_DP << endl;
+    /*if (person->calc_delay() > 200) {
+        cerr << "---------- RED FLAGGED RED FLAGGED ----------" << endl;
+        cerr << "Person: " << person->get_id() << endl;
+    }*/
 }
 
 
 void output_stats() {
     // order: mean_DA, s2_A, mean_DP
     // s2_A = v_A/Q (numCars should = Q)
+    
+    if (numPeopleExit < Q || numCarsExit < Q) {
+        cerr << "Not all objects have left; People: " << numPeopleExit << "/" << Q << "; Cars: " << numCarsExit << "/" << Q << endl;
+    }
+
     cout << "OUTPUT " << mean_DA << " " << v_A/Q << " " << mean_DP << endl;
 }
 
