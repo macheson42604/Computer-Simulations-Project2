@@ -227,6 +227,9 @@ void process_new_green() {
     }
 
     check_carQueue();
+
+    // DEBUG
+    cout << "NewGreen at " << simClock << endl;
 }
 
 /* 
@@ -240,6 +243,9 @@ void process_exp_green() {
     if (isPressed) {
         eventList.push(Event(simClock + Cross::MIN_DOUBLE, YellowEvent));
     }
+
+    //DEBUG
+    cout << "ExpGreen at " << simClock << endl;
 }
 
 /* 
@@ -252,7 +258,8 @@ void process_yellow() {
     // add Red event right after yellow light time finishes
     eventList.push(Event(simClock + Cross::YELLOW, RedEvent));
 
-    
+    // DEBUG 
+    cout << "Yellow light at " << simClock << endl;
 }
 
 /* 
@@ -273,6 +280,9 @@ void process_red() {
 
     // car logic
     check_carQueue();
+
+    // DEBUG
+    cout << "Red light at " << simClock << endl;
 }
 
 
@@ -306,7 +316,7 @@ PROCESS PERSON ARRIVAL EVENT
 */
 void process_person_arrive(Person* arrPerson) {
     // DEBUG
-    //cout << "Person " << arrPerson->get_id() << " has arrived at " << arrPerson->get_arr_time() << "; ";
+    cout << "Person " << arrPerson->get_id() << " has arrived at " << simClock << endl;
     // add the person to the list of pedestrians waiting at crosswalk
     personQueue.push_back(arrPerson);
 
@@ -315,11 +325,11 @@ void process_person_arrive(Person* arrPerson) {
     if (currLight != LightType::Red) { 
         // determine if the person is going to push the button
         // DEBUG
-        //cout << "personQueue is size: " << personQueue.size() << endl;
-        if (should_press(personQueue.size())) {
+        cout << "personQueue is size: " << personQueue.size() << endl;
+        if (should_press(personQueue.size()-1)) {
             firstArrival = false;
             // DEBUG
-            //cout << "Button was pressed!" << endl;
+            cout << "Button was pressed!" << endl;
             // set pressed button to true
             isPressed = true;
 
@@ -389,7 +399,7 @@ void process_check_min(Person* fplb) {
     if (inQueue && !isPressed) {
         isPressed = true;
         if (currLight == ExpGreen) {
-            eventList.push(Event(simClock + Cross::MIN_DOUBLE, ExpGreenEvent));
+            eventList.push(Event(simClock + Cross::MIN_DOUBLE, YellowEvent));
         }
     }
     return;
@@ -409,6 +419,8 @@ void walk(double remainTime) {
     // P-7: up to 20 pedestrians can cross in 1 cycle of the Red light
     // we need to have a counter because if there is a person that arrives to the light later in the red light and can make it they should be able to pass
     // iterate through the list of people and see if their walking time will be able to reach 
+    // DEBUG 
+    cout << "numWalked is " << numWalked << " on a " << get_light() << endl;
     while (!personQueue.empty() && numWalked < Cross::MAX_WALK_NUM && currInd < (int)personQueue.size()) {
         if (personQueue[currInd]->calc_cross_time() < remainTime) {
             // update their actual time in order to calculate delays for stats
@@ -418,7 +430,7 @@ void walk(double remainTime) {
             update_person_stats(personQueue[currInd]);
 
             // DEBUG
-            //cout << "simClock: " << simClock << " | curr Light: " << get_light() <<
+            //cout << "simClock: " << simClock <<
             //"| ped id: " << personQueue[currInd]->get_id() << "| ped enter: " << personQueue[currInd]->get_enter_time() << " | ped delay: " << personQueue[currInd]->calc_delay() << endl;
             
 
@@ -484,8 +496,8 @@ void check_carQueue() {
 
             // DEBUG
             //if (carQueue[carInd].get_id() == 23) {
-            //cout << "simClock: " << simClock << " | curr Light: " << get_light() << 
-            //"| car id: " << carQueue[carInd].get_id() << " | car enter time: " << carQueue[carInd].get_enter_time() << " | car exit time: " << carQueue[carInd].get_actual_time() << " | car delay: " << carQueue[carInd].calc_delay() << endl;
+            cout << "simClock: " << simClock << 
+            "| car id: " << carQueue[carInd].get_id() << " | car enter time: " << carQueue[carInd].get_enter_time() << " | car exit time: " << carQueue[carInd].get_actual_time() << " | car delay: " << carQueue[carInd].calc_delay() << endl;
             //    cout << "simClock: " << simClock << endl;
             //    cout << "curr Light: " << get_light() << endl;
             //    cout << "car id: " << carQueue[carInd].get_id() << endl;
