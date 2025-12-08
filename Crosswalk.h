@@ -105,7 +105,7 @@ void walk(double remainTime);
 void process_car_enter(Car*);
 void check_carQueue();
 void calc_actual_time(Car&);
-bool check_must_stop(Car&, double);
+bool check_must_stop(Car&, double, bool);
 void update_car_stats(Car&);
 void update_person_stats(Person*);
 void output_stats();

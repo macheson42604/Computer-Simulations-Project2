@@ -215,12 +215,16 @@ void process_new_green() {
 
     // P-6B: add CheckMin event corresponding to the first person left behind if this person exists (aka if PersonQueue is not empty)
     if (!personQueue.empty()) {
-        eventList.push(Event(simClock + 60, CheckMinEvent, personQueue[0]));
+        // Previously: just added check minute for the first person left behind but decided to just add it to all of the people left behind
+        // eventList.push(Event(simClock + 60, CheckMinEvent, personQueue[0]));
         // DEBUG
         //cout << "CheckMin event declared" << endl;
 
         // P-6C: loop through all the people in the queue and check if they will push the button with probability P(n=0)
         for (size_t i = 0; i < personQueue.size(); i++) {
+            // for all of the people left in the queue, just add a check minute for them
+            eventList.push(Event(simClock + 60, CheckMinEvent, personQueue[i]));
+            
             if (should_press(0)) {
                 isPressed = true;
                 break; // no need to continue checking if the other pedestrians will press the button (even though technically in the simulation all the pedestrians should have this probability)
@@ -329,7 +333,7 @@ void process_person_arrive(Person* arrPerson) {
         // DEBUG
         //cout << "personQueue is size: " << personQueue.size() << endl;
         if (should_press(personQueue.size()-1)) {
-            firstArrival = false;
+            // firstArrival = false;
             // DEBUG
             //cout << "Button was pressed!" << endl;
             // set pressed button to true
@@ -339,10 +343,14 @@ void process_person_arrive(Person* arrPerson) {
             if (currLight == LightType::ExpGreen) {
                 eventList.push(Event(simClock + Cross::MIN_DOUBLE, YellowEvent));
             }
-        } else if (firstArrival) {
-            firstArrival = false;
-            eventList.push(Event(simClock + 60, CheckMinEvent, personQueue[0]));
-        }
+        } 
+        // else if (firstArrival) {
+            // firstArrival = false;
+
+        // Change from Mimi - just add in a check minute event for this person regardless
+        // there could be an edge case that this person at the end of the queue pressed the button and couldn't cross in the 20 people group but their 1 min timer should be up soon so they would press the button again in the new green
+        eventList.push(Event(simClock + 60, CheckMinEvent, arrPerson));
+        // }
     }
 
     // if the pedestrian is arriving in the middle of the red, we need to check if it's possible for them to cross in the remaining time
@@ -400,10 +408,11 @@ void process_check_min(Person* fplb) {
     
     if (inQueue && !isPressed) {
         isPressed = true;
-        if (currLight == ExpGreen) {
+        if (currLight == LightType::ExpGreen) {
             eventList.push(Event(simClock + Cross::MIN_DOUBLE, YellowEvent));
         }
     }
+    // if the person isn't in the queue anymore then this process check minute can be ignored (because the person already lef the simulation - meaning they crossed already)
     return;
 }
 
@@ -483,16 +492,20 @@ void check_carQueue() {
     int carInd = 0;
     while (carInd < (int)carQueue.size() && !carQueue.empty() ) { 
         if (currLight == LightType::NewGreen) {
-            if (!check_must_stop(carQueue[carInd], Cross::DRIVE_CROSS_FRONT) && !carQueue[carInd].get_left()) { // Cars that arrived during the previous green or yellow lights and were told to stop or if they arrived during red and needed to stop
+            // Cars that arrived during the previous green or yellow lights and were told to stop or if they arrived during red and needed to stop
+            // if the car DOES reach the front of the crosswalk by the time the light is green and the car isn't from the red light processing (aka the car came in the middle of the red light), then the car needs a delay
+            if (check_must_stop(carQueue[carInd], Cross::DRIVE_CROSS_FRONT, false) && !carQueue[carInd].get_left()) { 
                 carQueue[carInd].set_stopped();
                 calc_actual_time(carQueue[carInd]);
-            } else {
+            // else if the car isn't from the red light processing (aka the car came in the middle of the red light) and the car DOESN'T need to slow down, the actual time will be the same as the optimal
+            } else if (!carQueue[carInd].get_left()) {
                 // DEBUG
                 // cout << "car index: " << carQueue[carInd].get_id() << endl;
                 
                 // cars that didn't stop will have same actual time as optimal time
                 carQueue[carInd].set_actual_time(carQueue[carInd].get_optimal_time());
             }
+            // OTHERWISE THE CAR IS FROM THE RED LIGHT PROCESSING AND ALREADY HAS ITS ACTUAL TIME CALCULATED - DO NOTHING
 
             // all cars leaving get these updated
             numCarsExit ++;
@@ -514,8 +527,9 @@ void check_carQueue() {
 
             carQueue.erase(carQueue.begin() + carInd); // pop off, yaaaAAs queen, you go gurl
 
-        } else if (currLight == LightType::Red) {            
-            if (!check_must_stop(carQueue[carInd], Cross::DRIVE_CROSS_END)) {
+        } else if (currLight == LightType::Red) {     
+            // all the cars that are able to pass the crosswalk before the light turned red
+            if (!check_must_stop(carQueue[carInd], Cross::DRIVE_CROSS_END, true)) {
                 // DEBUG
                 // cout << "Car: " << carQueue[carInd].get_id() << " stopped | ";
                 //carQueue[carInd].set_stopped();
@@ -555,7 +569,16 @@ void calc_actual_time(Car& car) {
 
     // this only works if this is only called at a new green light when the car drives off
     // if this is a green light, the simClock time will be the end of the cars wait time
-    double stoppedTime = simClock - (car.get_enter_time() + changingSpeedTime + constBeforeTime);
+    double stoppedTime = 0;
+    if (currLight == LightType::NewGreen) {
+        stoppedTime = simClock - (car.get_enter_time() + changingSpeedTime + constBeforeTime);
+    }
+    // there should be no other time this function is called (should only be at the start of the new green)
+    else {
+        cerr << "Error: calc_actual_time() is incorrectly called for cars on a " << get_light() << " light" << endl;
+        exit(1);
+    }
+
     // set indicated that stopped time is negative (meaning that actual time could be < optimal time)
     if (stoppedTime < 0) { car.set_is_stopped_neg(); }
     
@@ -569,14 +592,20 @@ void calc_actual_time(Car& car) {
     }*/
 }
 
-bool check_must_stop(Car& car, double dist) {
+
+// isAfterCrosswalk (bool): checks if the car is going to be past the crosswalk (true) or not past the crosswalk (false)
+// when the light is red (isAfterCrosswalk=true), we want to check if the car has surpassed the crosswalk - in this case check_must_stop must return true if distTraveled <= dist
+// when the light is new green (isAfterCrosswalk=false), we want to check if the car hasn't arrived at the crosswalk - in this case check_must_stop must return true if distTraveled >= dist
+bool check_must_stop(Car& car, double dist, bool isAfterCrosswalk) {
     // distance traveled = speed * time elapsed
     double distTraveled = car.get_speed() * (simClock - car.get_enter_time());
-    if (distTraveled >= dist) {
-        return false;
+    // if we travel further than the distance we're allowed to, we MUST stop (need to return true)
+    if ((isAfterCrosswalk && distTraveled <= dist) || (!isAfterCrosswalk && distTraveled >= dist)) {
+        return true;
     }
 
-    return true;
+    // otherwise 
+    return false;
 }
 
 
@@ -597,7 +626,7 @@ void update_car_stats(Car& car) {
 
     // update mean using Welfords (little redundant having in both update_car_stats and update_person_stats but better than calling 1 line func with 3 params)
     // bar_x_i = bar_x_i-1 + (1/i) * (x_i - bar_x_i-1)
-    mean_DA = mean_DA + ((1.0 / (double)car.get_id()) * (car.calc_delay() - mean_DA));
+    mean_DA = mean_DA + ((1.0 / (double)numCarsExit) * (car.calc_delay() - mean_DA));
 
     // DEBUG
     // cout << "car id: " << car.get_id() << "| car delay: " << car.calc_delay() << endl;
