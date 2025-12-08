@@ -54,7 +54,7 @@ PUBLIC VARIABLES
 - v_A (double): variable
     sample sum of squared deviations of automobile delays (calculated with Welfords) 
     NOTE: the final value to report should be variance s2_A = v_A / Q
-*/
+*/ 
 
 double simClock = 0.0;
 bool isPressed = false;
