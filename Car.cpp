@@ -57,10 +57,6 @@ double Car::calc_delay() {
         exit(1);
     }
     if ((!isStoppedTimeNeg) && (actualTime - optimalTime < 0)) {
-        // DEBUG
-        cout << "id: " << id << " | stopped: " << isStopped << " | actual: " << actualTime << " | optimal: " << optimalTime << endl;
-
-
         cerr << "Error: car actual time is less than optimal time" << endl;
         exit(1);
     }

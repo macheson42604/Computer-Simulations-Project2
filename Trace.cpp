@@ -35,9 +35,5 @@ double get_traceValue(ifstream& traceFileStream) {
         exit(1);
     }
 
-    //DEBUG
-    //if (traceValue == 0.1) {
-    //    cout << "Value Found" << endl;
-    //}
     return traceValue;
  }

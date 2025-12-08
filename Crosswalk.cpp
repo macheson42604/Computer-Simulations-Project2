@@ -65,7 +65,6 @@ priority_queue<Event, vector<Event>, greater<Event>> eventList;
 
 int numWalked = 0; // initialize to 0 - no one has walked yet
 double redEndTime = -1; //cannot use until processing first Red event
-bool firstArrival = true;
 
 // Simulation End Indicators
 int numPeople = 0;
@@ -165,10 +164,6 @@ int main (int argc, char* argv[]) {
         // set simulation clock time to that of the event
         simClock = curEvent.get_process_time();
 
-        // DEBUG
-        // cout << "simClock: " << simClock << " | events in queue: " << eventList.size() << "; curEvent: " << (string)curEvent.get_name() << endl;
-
-
         if (curEvent.get_type() == PersonEnterEvent) {
             process_person_enter(curEvent.get_assoc_person());
         } else if (curEvent.get_type() == PersonArriveEvent) {
@@ -217,9 +212,6 @@ void process_new_green() {
     if (!personQueue.empty()) {
         // Previously: just added check minute for the first person left behind but decided to just add it to all of the people left behind
         // eventList.push(Event(simClock + 60, CheckMinEvent, personQueue[0]));
-        // DEBUG
-        //cout << "CheckMin event declared" << endl;
-
         // P-6C: loop through all the people in the queue and check if they will push the button with probability P(n=0)
         for (size_t i = 0; i < personQueue.size(); i++) {
             // for all of the people left in the queue, just add a check minute for them
@@ -234,8 +226,6 @@ void process_new_green() {
 
     check_carQueue();
 
-    // DEBUG
-    //cout << "NewGreen at " << simClock << endl;
 }
 
 /* 
@@ -250,8 +240,6 @@ void process_exp_green() {
         eventList.push(Event(simClock + Cross::MIN_DOUBLE, YellowEvent));
     }
 
-    //DEBUG
-    //cout << "ExpGreen at " << simClock << endl;
 }
 
 /* 
@@ -263,9 +251,6 @@ void process_yellow() {
 
     // add Red event right after yellow light time finishes
     eventList.push(Event(simClock + Cross::YELLOW, RedEvent));
-
-    // DEBUG 
-    //cout << "Yellow light at " << simClock << endl;
 }
 
 /* 
@@ -287,8 +272,6 @@ void process_red() {
     // car logic
     check_carQueue();
 
-    // DEBUG
-    //cout << "Red light at " << simClock << endl;
 }
 
 
@@ -321,8 +304,6 @@ void process_person_enter(Person* currPerson) {
 PROCESS PERSON ARRIVAL EVENT
 */
 void process_person_arrive(Person* arrPerson) {
-    // DEBUG
-    //cout << "Person " << arrPerson->get_id() << " has arrived at " << simClock << endl;
     // add the person to the list of pedestrians waiting at crosswalk
     personQueue.push_back(arrPerson);
 
@@ -330,12 +311,8 @@ void process_person_arrive(Person* arrPerson) {
     // P-6A: press the button only if signal is a NO WALK state (aka as long as the light is not Red)
     if (currLight != LightType::Red) { 
         // determine if the person is going to push the button
-        // DEBUG
-        //cout << "personQueue is size: " << personQueue.size() << endl;
         if (should_press(personQueue.size()-1)) {
             // firstArrival = false;
-            // DEBUG
-            //cout << "Button was pressed!" << endl;
             // set pressed button to true
             isPressed = true;
 
@@ -344,8 +321,6 @@ void process_person_arrive(Person* arrPerson) {
                 eventList.push(Event(simClock + Cross::MIN_DOUBLE, YellowEvent));
             }
         } 
-        // else if (firstArrival) {
-            // firstArrival = false;
 
         // Change from Mimi - just add in a check minute event for this person regardless
         // there could be an edge case that this person at the end of the queue pressed the button and couldn't cross in the 20 people group but their 1 min timer should be up soon so they would press the button again in the new green
@@ -430,8 +405,6 @@ void walk(double remainTime) {
     // P-7: up to 20 pedestrians can cross in 1 cycle of the Red light
     // we need to have a counter because if there is a person that arrives to the light later in the red light and can make it they should be able to pass
     // iterate through the list of people and see if their walking time will be able to reach 
-    // DEBUG 
-    //cout << "numWalked is " << numWalked << " on a " << get_light() << endl;
     while (!personQueue.empty() && numWalked < Cross::MAX_WALK_NUM && currInd < (int)personQueue.size()) {
         if (personQueue[currInd]->calc_cross_time() < remainTime) {
             // update their actual time in order to calculate delays for stats
@@ -441,14 +414,7 @@ void walk(double remainTime) {
             numPeopleExit ++;
             update_person_stats(personQueue[currInd]);
 
-            // DEBUG
-            //cout << "simClock: " << simClock <<
-            //"| ped id: " << personQueue[currInd]->get_id() << "| ped enter: " << personQueue[currInd]->get_enter_time() << " | ped delay: " << personQueue[currInd]->calc_delay() << endl;
-            
-
-
-            // remove the person from the queue
-           
+            // remove the person from the queue           
             personQueue.erase(personQueue.begin() + currInd);
             // increase counter of people that have crossed
             numWalked++;
@@ -486,9 +452,6 @@ void process_car_enter(Car* currCar) {
 
 // called only during processing start of red event and new green event
 void check_carQueue() {
-    // DEBUG
-    //cout << "carQueue size: " << (int)carQueue.size() << endl;
-
     int carInd = 0;
     while (carInd < (int)carQueue.size() && !carQueue.empty() ) { 
         if (currLight == LightType::NewGreen) {
@@ -498,10 +461,7 @@ void check_carQueue() {
                 carQueue[carInd].set_stopped();
                 calc_actual_time(carQueue[carInd]);
             // else if the car isn't from the red light processing (aka the car came in the middle of the red light) and the car DOESN'T need to slow down, the actual time will be the same as the optimal
-            } else if (!carQueue[carInd].get_left()) {
-                // DEBUG
-                // cout << "car index: " << carQueue[carInd].get_id() << endl;
-                
+            } else if (!carQueue[carInd].get_left()) {  
                 // cars that didn't stop will have same actual time as optimal time
                 carQueue[carInd].set_actual_time(carQueue[carInd].get_optimal_time());
             }
@@ -511,27 +471,11 @@ void check_carQueue() {
             numCarsExit ++;
             update_car_stats(carQueue[carInd]);
 
-
-            // DEBUG
-            //if (carQueue[carInd].get_id() == 23) {
-            //cout << "simClock: " << simClock << 
-            //"| car id: " << carQueue[carInd].get_id() << " | car enter time: " << carQueue[carInd].get_enter_time() << " | car exit time: " << carQueue[carInd].get_actual_time() << " | car delay: " << carQueue[carInd].calc_delay() << endl;
-            //    cout << "simClock: " << simClock << endl;
-            //    cout << "curr Light: " << get_light() << endl;
-            //    cout << "car id: " << carQueue[carInd].get_id() << endl;
-            //    cout << "car enter time: " << carQueue[carInd].get_enter_time() << endl;
-            //    cout << "car exit time: " << carQueue[carInd].get_actual_time() << endl;
-            //    cout << "car delay: " << carQueue[carInd].calc_delay() << endl;
-            //}
-            
-
             carQueue.erase(carQueue.begin() + carInd); // pop off, yaaaAAs queen, you go gurl
 
         } else if (currLight == LightType::Red) {     
             // all the cars that are able to pass the crosswalk before the light turned red
             if (!check_must_stop(carQueue[carInd], Cross::DRIVE_CROSS_END, true)) {
-                // DEBUG
-                // cout << "Car: " << carQueue[carInd].get_id() << " stopped | ";
                 //carQueue[carInd].set_stopped();
                 carQueue[carInd].set_left();
                 carQueue[carInd].set_actual_time(carQueue[carInd].get_optimal_time());
@@ -545,9 +489,6 @@ void check_carQueue() {
         }
 
     }
-    
-    // DEBUG
-    // cout << "Exit check_carQueue()" << endl;
 }
 
 // actual time = before crosswalk time + deceleration time + wait time + acceleration time + after crosswalk time
@@ -628,9 +569,6 @@ void update_car_stats(Car& car) {
     // bar_x_i = bar_x_i-1 + (1/i) * (x_i - bar_x_i-1)
     mean_DA = mean_DA + ((1.0 / (double)numCarsExit) * (car.calc_delay() - mean_DA));
 
-    // DEBUG
-    // cout << "car id: " << car.get_id() << "| car delay: " << car.calc_delay() << endl;
-    // cout << "car mean: " << mean_DA << "| car v: " << v_A << endl;
 }
 
 // USED WELFORDS 
@@ -638,14 +576,6 @@ void update_person_stats(Person* person) {
     // update mean using Welfords
     // bar_x_i = bar_x_i-1 + (1/i) * (x_i - bar_x_i-1)
     mean_DP = mean_DP + ((1.0 / (double)numPeopleExit) * (person->calc_delay() - mean_DP));
-
-    // DEBUG
-    // cout << "person delay: " << person->calc_delay() << endl;
-    // cout << "person mean: " << mean_DP << endl;
-    /*if (person->calc_delay() > 200) {
-        cerr << "---------- RED FLAGGED RED FLAGGED ----------" << endl;
-        cerr << "Person: " << person->get_id() << endl;
-    }*/
 }
 
 
@@ -655,6 +585,7 @@ void output_stats() {
     
     if (numPeopleExit < Q || numCarsExit < Q) {
         cerr << "Not all objects have left; People: " << numPeopleExit << "/" << Q << "; Cars: " << numCarsExit << "/" << Q << endl;
+        exit(1);
     }
 
     cout << "OUTPUT " << mean_DA << " " << v_A/Q << " " << mean_DP << endl;
